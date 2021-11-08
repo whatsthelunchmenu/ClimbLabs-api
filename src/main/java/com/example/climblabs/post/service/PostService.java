@@ -1,5 +1,6 @@
 package com.example.climblabs.post.service;
 
+import com.example.climblabs.global.utils.image.ImageStorageUtils;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.content.Advantage;
@@ -19,6 +20,9 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    private final ImageStorageUtils imageStorageUtils;
+
+
     @Transactional
     public long createNewPost(PostRequest request) {
         Post newPost = postRepository.save(createPost(request));
@@ -26,7 +30,8 @@ public class PostService {
     }
 
     private Post createPost(PostRequest request) {
-        List<Image> images = request.convertImages(request.getImages());
+        List<Image> images = request.convertImages(
+            imageStorageUtils.saveToStorage(request.getImages()));
         List<Advantage> advantages = request.convertAdvantage(request.getAdvantages());
         List<DisAdvantage> disAdvantages = request.convertDisAdvantage(request.getDisAdvantages());
 

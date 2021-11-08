@@ -14,12 +14,10 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
-//@Value
-@Getter
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class PostRequest {
 
     private String title;
@@ -28,7 +26,7 @@ public class PostRequest {
     private String location;
     private String size;
     private String feature;
-    private List<String> images;
+    private List<MultipartFile> images;
     private List<String> advantages;
     private List<String> disAdvantages;
 
