@@ -22,4 +22,8 @@ public class DisAdvantage {
     public DisAdvantage(String item){
         this.item = item;
     }
+
+    public String getItem() {
+        return item;
+    }
 }

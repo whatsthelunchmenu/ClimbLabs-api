@@ -7,12 +7,16 @@ import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
 import com.example.climblabs.post.web.dto.PostRequest;
+import com.example.climblabs.post.web.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,11 +34,19 @@ public class PostService {
     }
 
     private Post createPost(PostRequest request) {
-        List<Image> images = request.convertImages(
-            imageStorageUtils.saveToStorage(request.getImages()));
-        List<Advantage> advantages = request.convertAdvantage(request.getAdvantages());
-        List<DisAdvantage> disAdvantages = request.convertDisAdvantage(request.getDisAdvantages());
+
+        Set<Image> images = request.convertImages(
+                imageStorageUtils.saveToStorage(request.getImages()));
+        Set<Advantage> advantages = request.convertAdvantage(request.getAdvantages());
+        Set<DisAdvantage> disAdvantages = request.convertDisAdvantage(request.getDisAdvantages());
 
         return request.getPost(images, advantages, disAdvantages);
+    }
+
+    public List<PostResponse> readPost(Pageable pageable) {
+        List<Post> posts = postRepository.findAllByPosts(pageable);
+        return posts.stream()
+                .map(it -> PostResponse.of(it))
+                .collect(Collectors.toList());
     }
 }

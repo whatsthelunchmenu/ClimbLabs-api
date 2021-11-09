@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -33,14 +35,13 @@ public class Post {
     private String feature;
 
     @OneToMany(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Advantage> advantages = new ArrayList<>();
+    private Set<Advantage> advantages = new HashSet<>();
 
     @OneToMany(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<DisAdvantage> disAdvantages = new ArrayList<>();
+    private Set<DisAdvantage> disAdvantages = new HashSet<>();
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Image> images = new ArrayList<>();
-
+    @OneToMany(mappedBy = "id",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Set<Image> images = new HashSet<>();
 
     @Builder
     public Post(
@@ -50,10 +51,10 @@ public class Post {
             String location,
             String size,
             String feature,
-            List<Advantage> advantages,
-            List<DisAdvantage> disAdvantages,
-            List<Image> images
-                ){
+            Set<Advantage> advantages,
+            Set<DisAdvantage> disAdvantages,
+            Set<Image> images
+    ) {
         this.title = title;
         this.climbingTitle = climbingTitle;
         this.level = level;
@@ -63,5 +64,22 @@ public class Post {
         this.advantages = advantages;
         this.disAdvantages = disAdvantages;
         this.images = images;
+    }
+
+    public List<String> getAdvantageResponseFrom(Set<Advantage> advantages) {
+        return advantages.stream()
+                .map(Advantage::getItem)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getDisAdvantageResponseFrom(Set<DisAdvantage> disAdvantages) {
+        return disAdvantages.stream()
+                .map(DisAdvantage::getItem)
+                .collect(Collectors.toList());
+    }
+    public List<String> getImageResponseFrom(Set<Image> images) {
+        return images.stream()
+                .map(Image::getUrl)
+                .collect(Collectors.toList());
     }
 }

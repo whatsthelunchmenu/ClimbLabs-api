@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -29,16 +30,16 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
 
     private List<String> saveImageFile(List<MultipartFile> images) {
         return images.parallelStream().map(it -> convertMultipartFileToFile(it))
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
-    private String convertMultipartFileToFile(MultipartFile multipartFile){
+    private String convertMultipartFileToFile(MultipartFile multipartFile) {
         String extension = getExtension(multipartFile.getOriginalFilename());
         String fullPath = System.getProperty("user.dir") + "/" + UUID.randomUUID() + extension;
         return save(multipartFile, fullPath);
     }
 
-    private String save(MultipartFile file, String fullPath){
+    private String save(MultipartFile file, String fullPath) {
         File newFile = new File(fullPath);
         try {
             if (newFile.createNewFile()) {
@@ -55,7 +56,7 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
     }
 
     private String getExtension(String fileName) {
-        if(Strings.isEmpty(fileName)){
+        if (Strings.isEmpty(fileName)) {
             return "";
         }
         return fileName.substring(fileName.lastIndexOf("."));
