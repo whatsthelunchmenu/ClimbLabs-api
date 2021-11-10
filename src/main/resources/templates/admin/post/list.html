@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragment/header.html :: fragment-header"> </div>
+</head>
+<body>
+<!--헤더-네비게이션-->
+    <div th:replace="/fragment/navi.html :: fragment-nav"></div>
+<!--바디 내용-->
+
+<div class="container">
+
+    <h1>Post 페이지</h1>
+
+    <div class="form-inline my-2 my-lg-0">
+        <span class="align-middle mr-2">검색</span>
+        <form  action="/admin/posts/search.do" method="get">
+            <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
+
+    <div class="row">
+
+        <div th:each="post, stat : ${posts}" class="col-sm-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${post.name}">Post Name</h5>
+                    <p class="card-text" th:text="${post.price}">Post price</p>
+                </div>
+                <a href="#" class="btn btn-primary">Click</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--푸터-->
+    <footer th:replace="/fragment/footer.html :: fragment-footer"/>
+</body>
+</html>
