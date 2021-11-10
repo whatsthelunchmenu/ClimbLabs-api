@@ -6,12 +6,20 @@ spring:
 
   datasource:
     hikari:
-#      jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
-      jdbc-url: jdbc:h2:file:D:/june/ClimbLabs-api/testdb
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
+#      jdbc-url: jdbc:h2:file:D:/june/ClimbLabs-api/testdb
       username: sa
+    driver-class-name: org.h2.Driver
 
   jpa:
+    defer-datasource-initialization: true # h2 DB 초기데이터 추가하기위한 설정
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-    generate-ddl: true
+#    generate-ddl: true
     show-sql: true
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        format_sql: true
+
