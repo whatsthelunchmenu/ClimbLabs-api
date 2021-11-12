@@ -13,12 +13,17 @@
     <h1>Post 페이지</h1>
 
     <div class="form-inline my-2 my-lg-0">
+        <form action="/admin/posts/create.do" method="get">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">게시물 생성</button>
+        </form>
+
         <span class="align-middle mr-2">검색</span>
-        <form  action="/admin/posts/search.do" method="get">
+        <form action="/admin/posts/search.do" method="get">
             <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
+
 
 
     <div class="row">
@@ -27,8 +32,8 @@
             <div class="card mb-3">
                 <img class="card-img-top" src="..." alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${post.name}">Post Name</h5>
-                    <p class="card-text" th:text="${post.price}">Post price</p>
+                    <h5 class="card-title" th:text="${post.climbingTitle}">Post Name</h5>
+                    <p class="card-text" th:text="${post.location}">Post price</p>
                 </div>
                 <a href="#" class="btn btn-primary">Click</a>
             </div>

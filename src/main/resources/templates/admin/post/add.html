@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="/fragment/header.html :: fragment-header"> </div>
+</head>
+<style>
+    table{
+        width: 100%;
+    }
+    table, td, th {
+        /*border-right: transparent;*/
+        border : 1px solid black;
+        border-collapse : collapse;
+    }
+    .container{
+        width: 100%;
+    }
+    input{
+        width: 100%;
+    }
+</style>
+<script>
+    <!-- 파일 업로드 스크립트 -->
+        $(document).ready(function ()
+            // input file 파일 첨부시 fileCheck 함수 실행
+            {
+                $("#input_file").on("change", fileCheck);
+            });
+
+            /**
+            * 첨부파일로직
+            */
+            $(function () {
+            $('#btn-upload').click(function (e) {
+                e.preventDefault();
+                $('#input_file').click();
+            });
+        });
+
+        var disAdvantage_num = 0;
+        var disAdvantage_list = new Array();
+        function addDisAdvanceList() {
+            var disAdvantage = $("#disAdvantage");
+            if (disAdvantage.val().length <= 0) {
+                alert("단점이 비어있습니다.");
+            }
+            else{
+                var item = disAdvantage.val();
+                disAdvantage_list.push(item);
+                $('#disAdvanceList').append(
+                    '<div class="center inline" id="disAdvantage' + disAdvantage_num + '">'
+                    + '<font style="font-size:12px float:left">' + "● "+ item + '</font>'
+                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="disAdvanceDelete(\'disAdvantage' + disAdvantage_num + '\')">X</span>'
+                    + '<div/>'
+                );
+                disAdvantage_num++;
+                $('#disAdvantage').val('');
+            }
+        }
+        function disAdvanceDelete(disAdvantageNum) {
+            var no = disAdvantageNum.replace(/[^0-9]/g, "");
+            var answer = window.confirm("선택하신 " + disAdvantage_list[no] + " 장점을 삭제하시겠습니까?");
+            if (answer) {
+                $('#' + disAdvantageNum).remove();
+                delete disAdvantage_list[no];
+                console.log(disAdvantage_list);
+            } else {
+            }
+        }
+
+        var advantage_num = 0;
+        var advantage_list = new Array();
+
+        function addAdvanceList() {
+            var advantage = $("#advantage");
+            if (advantage.val().length <= 0) {
+                alert("장점이 비어있습니다.");
+            }
+            else{
+                var item = advantage.val();
+                advantage_list.push(item);
+                $('#advanceList').append(
+                    '<div class="center inline" id="advantage' + advantage_num + '">'
+                    + '<font style="font-size:12px float:left">' + "● "+ item + '</font>'
+                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="advanceDelete(\'advantage' + advantage_num + '\')">X</span>'
+                    + '<div/>'
+                );
+                advantage_num++;
+                $('#advantage').val('');
+            }
+        }
+        function advanceDelete(advantageNum) {
+            console.log(advantageNum);
+            var no = advantageNum.replace(/[^0-9]/g, "");
+            var answer = window.confirm("선택하신 " + advantage_list[no] + " 장점을 삭제하시겠습니까?");
+            if (answer) {
+                $('#' + advantageNum).remove();
+                delete advantage_list[no]
+                console.log(advantage_list);
+            } else {
+            }
+            for (var x = 0; x < advantage_list.length; x++) {
+                // 삭제 안한것만 담아 준다.
+                if (advantage_list[x] != "") {
+                    console.log( advantage_list[x]);
+                }
+            }
+        }
+        // 파일 현재 필드 숫자 totalCount랑 비교값
+        var fileCount = 0;
+        // 해당 숫자를 수정하여 전체 업로드 갯수를 정한다.
+        var totalCount = 10;
+        // 파일 고유넘버
+        var fileNum = 0;
+        // 첨부파일 배열
+        var content_files = new Array();
+
+        function fileCheck(e) {
+            var files = e.target.files;
+
+            // 파일 배열 담기
+            var filesArr = Array.prototype.slice.call(files);
+
+            // 파일 개수 확인 및 제한
+            if (fileCount + filesArr.length > totalCount) {
+                alert('파일은 최대 ' + totalCount + '개까지 업로드 할 수 있습니다.');
+                return;
+            } else {
+                fileCount = fileCount + filesArr.length;
+            }
+
+            // 각각의 파일 배열담기 및 기타
+            filesArr.forEach(function (f) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    content_files.push(f);
+                    $('#imageFileChange').append(
+                        '<div class="center inline" id="file' + fileNum + '">'
+                            + '<font style="font-size:12px float:left">' + f.name + '</font>'
+                            + '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle;"/>'
+                            + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="fileDelete(\'file' + fileNum + '\')">X</span>'
+                        + '<div/>'
+                    );
+                    fileNum++;
+                };
+            reader.readAsDataURL(f);
+            });
+            console.log(content_files);
+            //초기화 한다.
+            $("#input_file").val("");
+        }
+
+        // 파일 부분 삭제 함수
+        function fileDelete(fileNum) {
+            var no = fileNum.replace(/[^0-9]/g, "");
+            var answer = window.confirm("선택하신 " + content_files[no].name + " 파일을 삭제하시겠습니까?");
+            if (answer) {
+                content_files[no].is_delete = true;
+                $('#' + fileNum).remove();
+                fileCount--;
+                console.log(content_files);
+            } else {
+            }
+        }
+
+
+        /*
+        * 폼 submit 로직
+        */
+        function registerAction() {
+
+            var form = $("form")[0];
+            var formData = new FormData(form);
+            for (var x = 0; x < content_files.length; x++) {
+                // 삭제 안한것만 담아 준다.
+                if (!content_files[x].is_delete) {
+                    formData.append("images", content_files[x]);
+                }
+            }
+            for (var x = 0; x < advantage_list.length; x++) {
+                // 삭제 안한것만 담아 준다.
+                if (!advantage_list[x].is_delete) {
+                    formData.append("advantages", advantage_list[x]);
+                }
+            }
+            for (var x = 0; x < disAdvantage_list.length; x++) {
+                // 삭제 안한것만 담아 준다.
+                if (!disAdvantage_list[x].is_delete) {
+                    formData.append("disAdvantages", disAdvantage_list[x]);
+                }
+            }
+            /*
+            * 파일업로드 multiple ajax처리
+            */
+            $.ajax({
+                type: "POST",
+                enctype: "multipart/form-data",
+                url: "/admin/posts/create.do",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log(data);
+                    // window.location = data;
+                    if (data===true) {
+                        alert("파일업로드 성공");
+                        window.location.href = '/admin/posts';
+                    } else
+                        alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
+                    }
+            });
+            return false;
+        }
+</script>
+<body>
+
+<!--헤더-네비게이션-->
+    <div th:replace="/fragment/navi.html :: fragment-nav"></div>
+
+    <div class="container">
+        <h1>게시물 추가</h1>
+        <div>
+            <form action="/admin/posts/create.do" method="post" th:object="${postInfo}">
+                <table>
+                    <tr>
+                        <td>
+                            <p>게시물 제목</p>
+                        </td>
+                        <td>
+                            <input type="text" name="title" placeholder="제목" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>암장 이름</p>
+                        </td>
+                        <td>
+                            <input type="text" name="climbingTitle" placeholder="클라이밍장 이름" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>위치</p>
+                        </td>
+                        <td>
+                            <div th:replace="/fragment/map/address.html :: fragment-address"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>규모</p>
+                        </td>
+                        <td>
+                            <input type="text" name="size" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>난이도</p>
+                        </td>
+                        <td>
+                            <select name="level">
+                                <option th:each="rating : ${ratings}" th:value="${rating.key}" th:text="${rating.value}"></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>특징</p>
+                        </td>
+                        <td>
+                            <input type="text" name="feature" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>장점</p>
+                        </td>
+                        <td>
+                            <div class="container">
+                                <input id="advantage" type="text" style="width: 90%" required>
+                                <button type="button" class="btn btn-secondary" onclick="addAdvanceList()">추가</button>
+                                <div id="advanceList">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>단점</p>
+                        </td>
+                        <td>
+                            <div class="container">
+                                <input id="disAdvantage"  type="text" style="width: 90%" required>
+                                <button type="button" class="btn btn-secondary" onclick="addDisAdvanceList()">추가</button>
+                                <div id="disAdvanceList">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>이미지</p>
+                        </td>
+                        <td>
+                            <div class="container">
+                                <button id="btn-upload" class="btn btn-secondary" type="button" style="border: 1px solid #ddd; outline: none;">
+                                    파일 추가
+                                </button>
+                                <input id="input_file" multiple="multiple" type="file" style="display:none;">
+                                <span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>
+                                <div class="data_file_txt" id="data_file_txt" style="margin:40px;">
+                                    <span>첨부 파일</span>
+                                    <br/>
+                                    <div id="imageFileChange">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" type="button" onclick="registerAction()">등록</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

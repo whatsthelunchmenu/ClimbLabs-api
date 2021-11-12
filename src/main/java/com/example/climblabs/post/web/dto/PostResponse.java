@@ -61,7 +61,7 @@ public class PostResponse {
                 .title(it.getTitle())
                 .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
-                .location(it.getLocation())
+                .location(it.getAddress())
                 .size(it.getSize())
                 .feature(it.getFeature())
                 .advantages(advantageList)

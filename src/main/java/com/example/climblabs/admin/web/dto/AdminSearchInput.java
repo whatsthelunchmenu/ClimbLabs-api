@@ -1,4 +1,4 @@
-package com.example.climblabs.admin;
+package com.example.climblabs.admin.web.dto;
 
 import lombok.Data;
 
