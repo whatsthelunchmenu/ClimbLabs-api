@@ -98,12 +98,7 @@
                 delete advantage_list[no]
                 console.log(advantage_list);
             } else {
-            }
-            for (var x = 0; x < advantage_list.length; x++) {
-                // 삭제 안한것만 담아 준다.
-                if (advantage_list[x] != "") {
-                    console.log( advantage_list[x]);
-                }
+                console.log("취소");
             }
         }
         // 파일 현재 필드 숫자 totalCount랑 비교값
@@ -177,18 +172,18 @@
                     formData.append("images", content_files[x]);
                 }
             }
-            for (var x = 0; x < advantage_list.length; x++) {
-                // 삭제 안한것만 담아 준다.
-                if (!advantage_list[x].is_delete) {
-                    formData.append("advantages", advantage_list[x]);
+            advantage_list.filter((element) => true)
+                .forEach((e, i) => {
+                    // console.log(e+"_"+i);
+                    formData.append("advantages", e);
                 }
-            }
-            for (var x = 0; x < disAdvantage_list.length; x++) {
-                // 삭제 안한것만 담아 준다.
-                if (!disAdvantage_list[x].is_delete) {
-                    formData.append("disAdvantages", disAdvantage_list[x]);
-                }
-            }
+            )
+            disAdvantage_list.filter((element) => true)
+                .forEach((e, i) => {
+                        // console.log(e+"_"+i);
+                        formData.append("disAdvantages", e);
+                    }
+                )
             /*
             * 파일업로드 multiple ajax처리
             */
