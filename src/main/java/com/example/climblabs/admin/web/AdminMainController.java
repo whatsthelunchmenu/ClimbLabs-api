@@ -3,7 +3,9 @@ package com.example.climblabs.admin.web;
 import com.example.climblabs.admin.web.dto.AdminPostResponse;
 import com.example.climblabs.admin.web.dto.AdminSearchInput;
 import com.example.climblabs.admin.web.dto.PostCreateInput;
+import com.example.climblabs.global.utils.common.RatingCreate;
 import com.example.climblabs.post.service.PostService;
+import com.example.climblabs.post.web.dto.PostRequest;
 import com.example.climblabs.post.web.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,7 +39,6 @@ public class AdminMainController {
 
         model.addAttribute("posts", postResponses);
 
-
         return "admin/post/list";
     }
 
@@ -49,41 +48,29 @@ public class AdminMainController {
     }
 
     @GetMapping("/admin/posts/search.do")
-    public String search(AdminSearchInput input) {
-        log.info(input.getSearch());
+    public String search(AdminSearchInput request, Model model) {
 
-        return "admin/admin_main_view";
+        List<PostResponse> postResponses = postService.findSearchPost(request.getSearchType(), request.getSearchValue(),
+                PageRequest.of(0, 3));
+        model.addAttribute("posts", postResponses);
+        return "admin/post/list";
     }
 
     @GetMapping("/admin/posts/create.do")
     public String createPost(Model model) {
 
-        model.addAttribute("postInfo", new AdminPostResponse());
-        model.addAttribute("ratings", new LinkedHashMap<Integer, String>() {
-            {
-                put(5, "★★★★★");
-                put(4, "★★★★");
-                put(3, "★★★");
-                put(2, "★★");
-                put(1, "★");
-            }
-        });
+        model.addAttribute("ratings", RatingCreate.getRatings());
         return "admin/post/add";
     }
 
     @PostMapping("/admin/posts/create.do")
     @ResponseBody
-    public boolean createPostSubmit(PostCreateInput postCreateInput) {
+    public boolean createPostSubmit(PostRequest request) {
 
-        log.info(""+postCreateInput.getLevel());
-        log.info(postCreateInput.getClimbingTitle());
-        log.info(postCreateInput.getFeature());
-        log.info(postCreateInput.getAddress());
-        log.info(postCreateInput.getZipCode());
-        log.info(postCreateInput.getDetailAddress());
-        log.info(postCreateInput.getSize());
-        log.info(postCreateInput.getTitle());
-
+        long newPostId = postService.createNewPost(request);
+        if (newPostId == 0) {
+            return false;
+        }
         return true;
     }
 }

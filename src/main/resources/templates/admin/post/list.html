@@ -12,27 +12,36 @@
 
     <h1>Post 페이지</h1>
 
-    <div class="form-inline my-2 my-lg-0">
-        <form action="/admin/posts/create.do" method="get">
-            <button class="btn btn-primary my-2 my-sm-0" type="submit">게시물 생성</button>
-        </form>
-
-        <span class="align-middle mr-2">검색</span>
-        <form action="/admin/posts/search.do" method="get">
-            <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>검색</label>
+            <div class="form-inline">
+                <form action="/admin/posts/search.do" method="get">
+                    <select name="searchType">
+                        <option th:each="searchType : ${T(com.example.climblabs.global.utils.common.SearchType).values()}"
+                                th:value="${searchType}" th:text="${searchType.getTypeValue()}"></option>
+                    </select>
+                    <input class="form-control mr-sm-2" th:name="searchValue" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <form action="/admin/posts/create.do" method="get">
+                <button class="btn btn-primary float-right" type="submit">게시물 생성</button>
+                <!--            <button class="btn btn-primary my-2 my-sm-0 float-right" type="submit">게시물 생성</button>-->
+            </form>
+        </div>
     </div>
-
-
 
     <div class="row">
 
         <div th:each="post, stat : ${posts}" class="col-sm-4">
-            <div class="card mb-3">
+            <div class="card mb-4">
                 <img class="card-img-top" src="..." alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${post.climbingTitle}">Post Name</h5>
+                    <h5 class="card-title" th:text="${post.title}">Post title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${post.climbingTitle}">Post subtitle</h6>
                     <p class="card-text" th:text="${post.location}">Post price</p>
                 </div>
                 <a href="#" class="btn btn-primary">Click</a>

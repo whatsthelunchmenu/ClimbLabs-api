@@ -21,7 +21,9 @@ public class PostRequest {
     private String title;
     private String climbingTitle;
     private int level;
-    private String location;
+    private String zipCode;
+    private String address;
+    private String detailAddress;
     private String size;
     private String feature;
     private List<MultipartFile> images;
@@ -59,7 +61,9 @@ public class PostRequest {
                 .title(this.title)
                 .climbingTitle(this.climbingTitle)
                 .level(this.level)
-                .location(this.location)
+                .zipCode(this.zipCode)
+                .address(this.address)
+                .detailAddress(this.detailAddress)
                 .size(this.size)
                 .feature(this.feature)
                 .images(images)
