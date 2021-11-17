@@ -34,7 +34,7 @@ public class PostApiController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> readMainPost(@PageableDefault Pageable pageable) {
-        List<PostResponse> postResponses =  postService.readPost(pageable);
+        List<PostResponse> postResponses =  postService.readPostApi(pageable);
 
         return ResponseEntity.ok(postResponses);
     }

@@ -1,5 +1,6 @@
 package com.example.climblabs.post.web.dto;
 
+import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class PostResponse {
+public class PostResponse extends CommonRequestDto {
     private Long id;
 
     private String title;

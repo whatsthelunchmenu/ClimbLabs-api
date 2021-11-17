@@ -1,5 +1,6 @@
 package com.example.climblabs.post.web.dto;
 
+import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.content.Advantage;
@@ -16,11 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Value
 @Builder
-public class PostRequest {
+public class PostRequest extends CommonRequestDto {
 
     private String title;
     private String climbingTitle;
-    private int level;
+    private Integer level;
     private String zipCode;
     private String address;
     private String detailAddress;

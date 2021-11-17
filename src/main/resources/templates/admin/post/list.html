@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="/fragment/header.html :: fragment-header"> </div>
+    <div th:replace="/fragment/header.html :: fragment-header"></div>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
 <!--헤더-네비게이션-->
-    <div th:replace="/fragment/navi.html :: fragment-nav"></div>
+<div th:replace="/fragment/navi.html :: fragment-nav"></div>
 <!--바디 내용-->
 
 <div class="container">
@@ -17,11 +18,16 @@
             <label>검색</label>
             <div class="form-inline">
                 <form action="/admin/posts/search.do" method="get">
-                    <select name="searchType">
+                    <select name="searchType" >
                         <option th:each="searchType : ${T(com.example.climblabs.global.utils.common.SearchType).values()}"
-                                th:value="${searchType}" th:text="${searchType.getTypeValue()}"></option>
+                                th:value="${searchType}"
+                                th:text="${searchType.getTypeValue()}"
+                                th:selected="${searchType == params.paginationInfo.getCriteria().getSearchType()}"
+                        ></option>
                     </select>
-                    <input class="form-control mr-sm-2" th:name="searchValue" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control mr-sm-2" th:name="searchValue"
+                           th:value="${params.paginationInfo.getCriteria().getSearchValue()}" type="search"
+                           placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
@@ -50,8 +56,23 @@
     </div>
 </div>
 
+<th:block layout:fragment="paging">
+    <nav th:replace="fragment/pagination/pagination_number.html :: pagination"></nav>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        function movePage(uri, queryString) {
+            location.href = uri + queryString;
+        }
+
+        /*]]>*/
+    </script>
+</th:block>
 
 <!--푸터-->
-    <footer th:replace="/fragment/footer.html :: fragment-footer"/>
+<footer th:replace="/fragment/footer.html :: fragment-footer"/>
 </body>
 </html>
