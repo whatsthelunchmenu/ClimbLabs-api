@@ -1,5 +1,6 @@
 package com.example.climblabs.post.web.dto;
 
+import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class PostResponse {
+public class PostResponse extends CommonRequestDto {
     private Long id;
 
     private String title;
@@ -18,7 +19,11 @@ public class PostResponse {
 
     private int level;
 
-    private String location;
+    private String zipCode;
+
+    private String address;
+
+    private String detailAddress;
 
     private String size;
 
@@ -35,14 +40,21 @@ public class PostResponse {
                         String title,
                         String climbingTitle,
                         int level,
-                        String location,
+                        String zipCode,
+                        String address,
+                        String detailAddress,
                         String size,
-                        String feature, List<String> advantages, List<String> disAdvantages, List<String> images) {
+                        String feature,
+                        List<String> advantages,
+                        List<String> disAdvantages,
+                        List<String> images) {
         this.id = id;
         this.title = title;
         this.climbingTitle = climbingTitle;
         this.level = level;
-        this.location = location;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.detailAddress = detailAddress;
         this.size = size;
         this.feature = feature;
         this.advantages = advantages;
@@ -61,7 +73,9 @@ public class PostResponse {
                 .title(it.getTitle())
                 .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
-                .location(it.getLocation())
+                .zipCode(it.getZipCode())
+                .address(it.getAddress())
+                .detailAddress(it.getDetailAddress())
                 .size(it.getSize())
                 .feature(it.getFeature())
                 .advantages(advantageList)

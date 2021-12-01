@@ -28,7 +28,11 @@ public class Post {
 
     private int level;
 
-    private String location;
+    private String zipCode;
+
+    private String address;
+
+    private String detailAddress;
 
     private String size;
 
@@ -48,7 +52,9 @@ public class Post {
             String title,
             String climbingTitle,
             int level,
-            String location,
+            String zipCode,
+            String address,
+            String detailAddress,
             String size,
             String feature,
             Set<Advantage> advantages,
@@ -58,7 +64,9 @@ public class Post {
         this.title = title;
         this.climbingTitle = climbingTitle;
         this.level = level;
-        this.location = location;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.detailAddress = detailAddress;
         this.size = size;
         this.feature = feature;
         this.advantages = advantages;

@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class PostController {
+public class PostApiController {
 
     private final PostService postService;
 
@@ -34,7 +34,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> readMainPost(@PageableDefault Pageable pageable) {
-        List<PostResponse> postResponses =  postService.readPost(pageable);
+        List<PostResponse> postResponses =  postService.readPostApi(pageable);
 
         return ResponseEntity.ok(postResponses);
     }
