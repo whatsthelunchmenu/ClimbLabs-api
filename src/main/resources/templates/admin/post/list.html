@@ -48,9 +48,9 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${post.title}">Post title</h5>
                     <h6 class="card-subtitle mb-2 text-muted" th:text="${post.climbingTitle}">Post subtitle</h6>
-                    <p class="card-text" th:text="${post.location}">Post price</p>
+                    <p class="card-text" th:text="${post.address}">Post price</p>
                 </div>
-                <a href="#" class="btn btn-primary">Click</a>
+                <a th:href="'/admin/posts/update.do?id=' + ${post.id}" class="btn btn-primary">수정</a>
             </div>
         </div>
     </div>

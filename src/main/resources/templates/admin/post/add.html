@@ -37,70 +37,122 @@
             });
         });
 
+        var disAdvantage_load = false;
         var disAdvantage_num = 0;
         var disAdvantage_list = new Array();
+
+        function disAdvantageInit() {
+            var targetLabel = document.querySelectorAll('.disAdvantageItem');
+            for(var i=0; i<targetLabel.length; i++) {
+                var text = targetLabel[i].textContent.trim();
+                disAdvantage_list.push(text);
+                disAdvantage_num++;
+            }
+            disAdvantage_load = true;
+        }
+
         function addDisAdvanceList() {
+
+            if(!disAdvantage_load) {
+                disAdvantageInit();
+            }
+
             var disAdvantage = $("#disAdvantage");
             if (disAdvantage.val().length <= 0) {
-                alert("단점이 비어있습니다.");
+                alert("장점이 비어있습니다.");
             }
             else{
                 var item = disAdvantage.val();
+                console.log("value : "+item);
                 disAdvantage_list.push(item);
-                $('#disAdvanceList').append(
-                    '<div class="center inline" id="disAdvantage' + disAdvantage_num + '">'
-                    + '<font style="font-size:12px float:left">' + "● "+ item + '</font>'
-                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="disAdvanceDelete(\'disAdvantage' + disAdvantage_num + '\')">X</span>'
+                $('#disAdvantageList').append(
+                    '<div id="disAdvantage' + disAdvantage_num + '">'
+                    + '<label style="font-size:12px float:left">' + item + '</label>'
+                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="deleteDisAdvanceItem(\'' + item + '\')">X</span>'
                     + '<div/>'
                 );
                 disAdvantage_num++;
                 $('#disAdvantage').val('');
             }
         }
-        function disAdvanceDelete(disAdvantageNum) {
-            var no = disAdvantageNum.replace(/[^0-9]/g, "");
-            var answer = window.confirm("선택하신 " + disAdvantage_list[no] + " 장점을 삭제하시겠습니까?");
-            if (answer) {
-                $('#' + disAdvantageNum).remove();
-                delete disAdvantage_list[no];
+
+        function deleteDisAdvanceItem(disAdvanceItem) {
+            if (disAdvantage_list == "") {
+                console.log("Thymeleaf에서 추가하여 리스트에 비어있어 추가");
+                disAdvantage_list.push(disAdvanceItem);
                 console.log(disAdvantage_list);
-            } else {
+            }
+            var index = disAdvantage_list.indexOf(disAdvanceItem);
+            console.log("인덱스 : "+index);
+
+            var answer = window.confirm("선택하신 " + disAdvantage_list[index] + " 장점을 삭제하시겠습니까?");
+            if (answer) {
+                $('#disAdvantage' + index).remove();
+                delete disAdvantage_list[index]
+                console.log(disAdvantage_list);
+            }else{
+                console.log("취소");
             }
         }
 
+        var advantage_load = false;
         var advantage_num = 0;
         var advantage_list = new Array();
 
+        function advantageInit() {
+            var targetLabel = document.querySelectorAll('.advantageItem');
+            for(var i=0; i<targetLabel.length; i++) {
+                var text = targetLabel[i].textContent.trim();
+                advantage_list.push(text);
+                advantage_num++;
+            }
+            advantage_load = true;
+        }
+
         function addAdvanceList() {
+
+            if(!advantage_load) {
+                advantageInit();
+            }
+
             var advantage = $("#advantage");
             if (advantage.val().length <= 0) {
                 alert("장점이 비어있습니다.");
             }
             else{
                 var item = advantage.val();
+                console.log("value : "+item);
                 advantage_list.push(item);
-                $('#advanceList').append(
-                    '<div class="center inline" id="advantage' + advantage_num + '">'
-                    + '<font style="font-size:12px float:left">' + "● "+ item + '</font>'
-                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="advanceDelete(\'advantage' + advantage_num + '\')">X</span>'
+                $('#advantageList').append(
+                    '<div id="advantage' + advantage_num + '">'
+                    + '<label style="font-size:12px float:left">' + item + '</label>'
+                    + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="deleteAdvanceItem(\'' + item + '\')">X</span>'
                     + '<div/>'
                 );
                 advantage_num++;
                 $('#advantage').val('');
             }
         }
-        function advanceDelete(advantageNum) {
-            console.log(advantageNum);
-            var no = advantageNum.replace(/[^0-9]/g, "");
-            var answer = window.confirm("선택하신 " + advantage_list[no] + " 장점을 삭제하시겠습니까?");
-            if (answer) {
-                $('#' + advantageNum).remove();
-                delete advantage_list[no]
+
+        function deleteAdvanceItem(advanceItem) {
+            if (advantage_list == "") {
+                console.log("Thymeleaf에서 추가하여 리스트에 비어있어 추가");
+                advantage_list.push(advanceItem);
                 console.log(advantage_list);
-            } else {
+            }
+            var index = advantage_list.indexOf(advanceItem);
+            console.log("인덱스 : "+index);
+
+            var answer = window.confirm("선택하신 " + advantage_list[index] + " 장점을 삭제하시겠습니까?");
+            if (answer) {
+                $('#advantage' + index).remove();
+                delete advantage_list[index]
+                console.log(advantage_list);
+            }else{
                 console.log("취소");
             }
         }
+
         // 파일 현재 필드 숫자 totalCount랑 비교값
         var fileCount = 0;
         // 해당 숫자를 수정하여 전체 업로드 갯수를 정한다.
@@ -111,6 +163,7 @@
         var content_files = new Array();
 
         function fileCheck(e) {
+            console.log("파일 시작");
             var files = e.target.files;
 
             // 파일 배열 담기
@@ -131,8 +184,8 @@
                     content_files.push(f);
                     $('#imageFileChange').append(
                         '<div class="center inline" id="file' + fileNum + '">'
-                            + '<font style="font-size:12px float:left">' + f.name + '</font>'
-                            + '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle;"/>'
+                            + '<img src="https://free-url-shortener.rb.gy/open-graph.png" style="width:20px; height:auto; vertical-align: middle;"/>'
+                            + '<label style="font-size:12px float:left">' + f.name + '</label>'
                             + '<span style="color:red; height:auto; margin-left: 10%; cursor: pointer" onclick="fileDelete(\'file' + fileNum + '\')">X</span>'
                         + '<div/>'
                     );
@@ -163,6 +216,9 @@
         * 폼 submit 로직
         */
         function registerAction() {
+
+            advantageInit();
+            disAdvantageInit();
 
             var form = $("form")[0];
             var formData = new FormData(form);
@@ -222,7 +278,7 @@
                             <p>게시물 제목</p>
                         </td>
                         <td>
-                            <input type="text" name="title" placeholder="제목" required>
+                            <input type="text" name="title" placeholder="제목" th:value="${post?.title}" required>
                         </td>
                     </tr>
                     <tr>
@@ -230,7 +286,7 @@
                             <p>암장 이름</p>
                         </td>
                         <td>
-                            <input type="text" name="climbingTitle" placeholder="클라이밍장 이름" required>
+                            <input type="text" name="climbingTitle" placeholder="클라이밍장 이름" th:value="${post?.climbingTitle}" required>
                         </td>
                     </tr>
                     <tr>
@@ -246,7 +302,7 @@
                             <p>규모</p>
                         </td>
                         <td>
-                            <input type="text" name="size" required>
+                            <input type="text" name="size" th:value="${post?.size}" required>
                         </td>
                     </tr>
                     <tr>
@@ -255,7 +311,10 @@
                         </td>
                         <td>
                             <select name="level">
-                                <option th:each="rating : ${ratings}" th:value="${rating.key}" th:text="${rating.value}"></option>
+                                <option th:each="rating : ${ratings}"
+                                        th:value="${rating.key}"
+                                        th:text="${rating.value}"
+                                        th:selected="${rating.key == post?.level}"></option>
                             </select>
                         </td>
                     </tr>
@@ -264,7 +323,7 @@
                             <p>특징</p>
                         </td>
                         <td>
-                            <input type="text" name="feature" required>
+                            <input type="text" name="feature" th:value="${post?.feature}" required>
                         </td>
                     </tr>
                     <tr>
@@ -275,7 +334,14 @@
                             <div class="container">
                                 <input id="advantage" type="text" style="width: 90%" required>
                                 <button type="button" class="btn btn-secondary" onclick="addAdvanceList()">추가</button>
-                                <div id="advanceList">
+                                <div class="advantageList" id="advantageList">
+                                    <div th:id="'advantage' + ${advantageStat.index}" th:each="advantage : ${post?.advantages}">
+                                        <div class="advantageItem">
+                                            <label style="float:left" th:text="${advantage}" />
+                                        </div>
+                                        <span style="color:red; height:auto; margin-left: 10%; cursor: pointer"
+                                              th:onclick="deleteAdvanceItem([[${advantage}]])">X</span>
+                                    <div/>
                                 </div>
                             </div>
                         </td>
@@ -288,7 +354,14 @@
                             <div class="container">
                                 <input id="disAdvantage"  type="text" style="width: 90%" required>
                                 <button type="button" class="btn btn-secondary" onclick="addDisAdvanceList()">추가</button>
-                                <div id="disAdvanceList">
+                                <div class="disAdvantageList" id="disAdvantageList">
+                                    <div th:id="'disAdvantage' + ${disAdvantageStat.index}" th:each="disAdvantage : ${post?.disAdvantages}">
+                                        <div class="disAdvantageItem">
+                                            <label style="float:left" th:text="${disAdvantage}" />
+                                        </div>
+                                        <span style="color:red; height:auto; margin-left: 10%; cursor: pointer"
+                                              th:onclick="deleteDisAdvanceItem([[${disAdvantage}]])">X</span>
+                                    <div/>
                                 </div>
                             </div>
                         </td>
@@ -307,6 +380,14 @@
                                 <div class="data_file_txt" id="data_file_txt" style="margin:40px;">
                                     <span>첨부 파일</span>
                                     <br/>
+                                    <div class="imageList">
+                                        <div class="center inline" th:id="'image' + ${imageStat.index}" th:each="image : ${post?.images}">
+                                            <img style="width:20px; height:auto; vertical-align: middle; float: left" th:src="${image}"/>
+                                            <label style="float:left"> test </label>
+                                            <span style="color:red; height:auto; margin-left: 10%; cursor: pointer"
+                                                  th:onclick="fileDelete([[${disAdvantage}]])">X</span>
+                                        </div>
+                                    </div>
                                     <div id="imageFileChange">
                                     </div>
                                 </div>

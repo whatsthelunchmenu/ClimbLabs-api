@@ -19,7 +19,11 @@ public class PostResponse extends CommonRequestDto {
 
     private int level;
 
-    private String location;
+    private String zipCode;
+
+    private String address;
+
+    private String detailAddress;
 
     private String size;
 
@@ -36,14 +40,21 @@ public class PostResponse extends CommonRequestDto {
                         String title,
                         String climbingTitle,
                         int level,
-                        String location,
+                        String zipCode,
+                        String address,
+                        String detailAddress,
                         String size,
-                        String feature, List<String> advantages, List<String> disAdvantages, List<String> images) {
+                        String feature,
+                        List<String> advantages,
+                        List<String> disAdvantages,
+                        List<String> images) {
         this.id = id;
         this.title = title;
         this.climbingTitle = climbingTitle;
         this.level = level;
-        this.location = location;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.detailAddress = detailAddress;
         this.size = size;
         this.feature = feature;
         this.advantages = advantages;
@@ -62,7 +73,9 @@ public class PostResponse extends CommonRequestDto {
                 .title(it.getTitle())
                 .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
-                .location(it.getAddress())
+                .zipCode(it.getZipCode())
+                .address(it.getAddress())
+                .detailAddress(it.getDetailAddress())
                 .size(it.getSize())
                 .feature(it.getFeature())
                 .advantages(advantageList)

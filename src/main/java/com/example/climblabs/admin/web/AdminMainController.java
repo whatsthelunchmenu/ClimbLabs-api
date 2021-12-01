@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -50,9 +48,14 @@ public class AdminMainController {
         return "admin/post/list";
     }
 
-    @GetMapping("/admin/posts/create.do")
-    public String createPost(Model model) {
+    @GetMapping(value = {"/admin/posts/create.do", "/admin/posts/update.do"})
+    public String createPost(@RequestParam(value = "id", required = false) Long postId, HttpServletRequest request, Model model) {
 
+        if (request.getRequestURI().contains("update.do")) {
+            PostResponse updatedPostResponse = postService.findByIdPost(postId);
+            log.info(""+ postId);
+            model.addAttribute("post", updatedPostResponse);
+        }
         model.addAttribute("ratings", RatingCreate.getRatings());
         return "admin/post/add";
     }
