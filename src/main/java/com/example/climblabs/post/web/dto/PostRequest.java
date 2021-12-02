@@ -3,9 +3,11 @@ package com.example.climblabs.post.web.dto;
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
+import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.springframework.util.CollectionUtils;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 
 @Value
+@EqualsAndHashCode(callSuper = true)
 @Builder
 public class PostRequest extends CommonRequestDto {
 
@@ -25,7 +28,7 @@ public class PostRequest extends CommonRequestDto {
     private String zipCode;
     private String address;
     private String detailAddress;
-    private String size;
+    private ScaleType scaleType;
     private String feature;
     private List<MultipartFile> images;
     private List<String> advantages;
@@ -62,14 +65,14 @@ public class PostRequest extends CommonRequestDto {
                 .title(this.title)
                 .climbingTitle(this.climbingTitle)
                 .level(this.level)
-                .zipCode(this.zipCode)
-                .address(this.address)
-                .detailAddress(this.detailAddress)
-                .size(this.size)
+//                .zipCode(this.zipCode)
+//                .address(this.address)
+//                .detailAddress(this.detailAddress)
+                .scaleType(this.scaleType)
                 .feature(this.feature)
-                .images(images)
-                .advantages(advantages)
-                .disAdvantages(disAdvantages)
+//                .images(images)
+//                .advantages(advantages)
+//                .disAdvantages(disAdvantages)
                 .build();
     }
 }

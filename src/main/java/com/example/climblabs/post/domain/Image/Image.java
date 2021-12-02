@@ -16,6 +16,10 @@ public class Image {
 
     private String url;
 
+    @ManyToOne
+    @JoinColumn(name = "POST_ID")
+    private Post post;
+
     @Builder
     public Image(String url){
         this.url = url;
@@ -23,5 +27,13 @@ public class Image {
 
     public String getUrl(){
         return url;
+    }
+
+    public void setPost(Post post){
+        if (this.post != null){
+            post.getImages().remove(this);
+        }
+        this.post = post;
+        post.getImages().add(this);
     }
 }

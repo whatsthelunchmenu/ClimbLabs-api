@@ -1,5 +1,6 @@
 package com.example.climblabs.post.domain;
 
+import com.example.climblabs.member.domain.Member;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "POST_ID")
     private Long id;
 
     private String title;
@@ -28,50 +31,48 @@ public class Post {
 
     private int level;
 
-    private String zipCode;
+    @Embedded
+    private Address address;
 
-    private String address;
-
-    private String detailAddress;
-
-    private String size;
+    @Enumerated(EnumType.STRING)
+    private ScaleType scaleType;
 
     private String feature;
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Advantage> advantages = new HashSet<>();
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<DisAdvantage> disAdvantages = new HashSet<>();
 
-    @OneToMany(mappedBy = "id",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Image> images = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     @Builder
     public Post(
             String title,
             String climbingTitle,
             int level,
-            String zipCode,
-            String address,
-            String detailAddress,
-            String size,
-            String feature,
-            Set<Advantage> advantages,
-            Set<DisAdvantage> disAdvantages,
-            Set<Image> images
+            Address address,
+            ScaleType scaleType,
+            String feature
     ) {
         this.title = title;
         this.climbingTitle = climbingTitle;
         this.level = level;
-        this.zipCode = zipCode;
         this.address = address;
-        this.detailAddress = detailAddress;
-        this.size = size;
+        this.scaleType = scaleType;
         this.feature = feature;
-        this.advantages = advantages;
-        this.disAdvantages = disAdvantages;
-        this.images = images;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public List<String> getAdvantageResponseFrom(Set<Advantage> advantages) {
@@ -85,9 +86,19 @@ public class Post {
                 .map(DisAdvantage::getItem)
                 .collect(Collectors.toList());
     }
+
     public List<String> getImageResponseFrom(Set<Image> images) {
         return images.stream()
                 .map(Image::getUrl)
                 .collect(Collectors.toList());
+    }
+
+    public void setMember(Member member) {
+        // 기존 연관관계 제거
+        if (this.member != null) {
+            member.getPost().remove(this);
+        }
+        this.member = member;
+        member.getPost().add(this);
     }
 }
