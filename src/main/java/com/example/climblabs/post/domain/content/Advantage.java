@@ -27,6 +27,12 @@ public class Advantage {
         this.item = item;
     }
 
+    public Advantage(Post post, String item){
+        setPost(post);
+
+        this.item = item;
+    }
+
     public String getItem() {
         return item;
     }
@@ -34,7 +40,7 @@ public class Advantage {
     public void setPost(Post post) {
         //기존에 연결되어있는 연관관계 제거
         if (this.post != null) {
-            post.getAdvantages().remove(this);
+            this.post.getAdvantages().remove(this);
         }
         this.post = post;
         post.getAdvantages().add(this);

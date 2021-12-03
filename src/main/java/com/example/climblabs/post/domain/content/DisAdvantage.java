@@ -25,13 +25,18 @@ public class DisAdvantage {
         this.item = item;
     }
 
+    public DisAdvantage(Post post, String item) {
+        setPost(post);
+        this.item = item;
+    }
+
     public String getItem() {
         return item;
     }
 
     public void setPost(Post post) {
-        if (this.post != null){
-            post.getDisAdvantages().remove(this);
+        if (this.post != null) {
+            this.post.getDisAdvantages().remove(this);
         }
         this.post = post;
         post.getDisAdvantages().add(this);

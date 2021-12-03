@@ -96,9 +96,11 @@ public class Post {
     public void setMember(Member member) {
         // 기존 연관관계 제거
         if (this.member != null) {
-            member.getPost().remove(this);
+            this.member.getPost().remove(this);
         }
         this.member = member;
         member.getPost().add(this);
     }
+
+
 }

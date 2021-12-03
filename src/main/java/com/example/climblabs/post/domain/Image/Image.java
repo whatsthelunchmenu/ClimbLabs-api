@@ -31,7 +31,7 @@ public class Image {
 
     public void setPost(Post post){
         if (this.post != null){
-            post.getImages().remove(this);
+            this.post.getImages().remove(this);
         }
         this.post = post;
         post.getImages().add(this);
