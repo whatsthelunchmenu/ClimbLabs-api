@@ -2,6 +2,7 @@ package com.example.climblabs.post.web.dto;
 
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Post;
+import com.example.climblabs.post.domain.ScaleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class PostResponse extends CommonRequestDto {
 
     private String detailAddress;
 
-    private String size;
+    private ScaleType scaleType;
 
     private String feature;
 
@@ -43,7 +44,7 @@ public class PostResponse extends CommonRequestDto {
                         String zipCode,
                         String address,
                         String detailAddress,
-                        String size,
+                        ScaleType scaleType,
                         String feature,
                         List<String> advantages,
                         List<String> disAdvantages,
@@ -55,7 +56,7 @@ public class PostResponse extends CommonRequestDto {
         this.zipCode = zipCode;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.size = size;
+        this.scaleType = scaleType;
         this.feature = feature;
         this.advantages = advantages;
         this.disAdvantages = disAdvantages;
@@ -73,10 +74,10 @@ public class PostResponse extends CommonRequestDto {
                 .title(it.getTitle())
                 .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
-                .zipCode(it.getZipCode())
-                .address(it.getAddress())
-                .detailAddress(it.getDetailAddress())
-                .size(it.getSize())
+//                .zipCode(it.getZipCode())
+//                .address(it.getAddress())
+//                .detailAddress(it.getDetailAddress())
+                .scaleType(it.getScaleType())
                 .feature(it.getFeature())
                 .advantages(advantageList)
                 .disAdvantages(disAdvantiageList)

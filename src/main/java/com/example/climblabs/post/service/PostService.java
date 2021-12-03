@@ -34,7 +34,6 @@ public class PostService {
 
     private final ImageStorageUtils imageStorageUtils;
 
-
     @Transactional
     public long createNewPost(PostRequest request) {
         Post newPost = postRepository.save(createPost(request));
@@ -43,12 +42,21 @@ public class PostService {
 
     private Post createPost(PostRequest request) {
 
-        Set<Image> images = request.convertImages(
-                imageStorageUtils.saveToStorage(request.getImages()));
-        Set<Advantage> advantages = request.convertAdvantage(request.getAdvantages());
-        Set<DisAdvantage> disAdvantages = request.convertDisAdvantage(request.getDisAdvantages());
+        Post newPost = request.getPost();
+        request.getAdvantages()
+                .stream()
+                .map(item -> new Advantage(newPost, item))
+                .collect(Collectors.toList());
 
-        return request.getPost(images, advantages, disAdvantages);
+        request.getDisAdvantages()
+                .stream()
+                .map(item -> new DisAdvantage(newPost, item))
+                .collect(Collectors.toList());
+
+        request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
+                .stream().forEach(item-> item.setPost(newPost));
+
+        return newPost;
     }
 
     public List<PostResponse> readPostApi(Pageable pageable) {

@@ -1,12 +1,10 @@
 package com.example.climblabs.post.domain.content;
 
+import com.example.climblabs.post.domain.Post;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @Entity
@@ -18,12 +16,30 @@ public class DisAdvantage {
 
     private String item;
 
+    @ManyToOne
+    @JoinColumn(name = "POST_ID")
+    private Post post;
+
     @Builder
-    public DisAdvantage(String item){
+    public DisAdvantage(String item) {
+        this.item = item;
+    }
+
+    public DisAdvantage(Post post, String item) {
+        setPost(post);
         this.item = item;
     }
 
     public String getItem() {
         return item;
     }
+
+    public void setPost(Post post) {
+        if (this.post != null) {
+            this.post.getDisAdvantages().remove(this);
+        }
+        this.post = post;
+        post.getDisAdvantages().add(this);
+    }
+
 }
