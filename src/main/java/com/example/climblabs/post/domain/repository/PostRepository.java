@@ -26,4 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select count (p) from Post p where p.climbingTitle like %:climbingTitle%")
     long countLikeClimbingTitlePosts(@Param("climbingTitle") String climbingTitle);
 
+    @Query(value = "select * from post order by rand() limit 5", nativeQuery = true)
+    List<Post> findByRandomLimitPost();
 }
