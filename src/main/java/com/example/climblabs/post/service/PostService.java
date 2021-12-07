@@ -9,6 +9,7 @@ import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
+import com.example.climblabs.post.web.dto.PostApiResponse;
 import com.example.climblabs.post.web.dto.PostRequest;
 import com.example.climblabs.post.web.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,17 +45,17 @@ public class PostService {
 
         Post newPost = request.getPost();
         request.getAdvantages()
-                .stream()
-                .map(item -> new Advantage(newPost, item))
-                .collect(Collectors.toList());
+            .stream()
+            .map(item -> new Advantage(newPost, item))
+            .collect(Collectors.toList());
 
         request.getDisAdvantages()
-                .stream()
-                .map(item -> new DisAdvantage(newPost, item))
-                .collect(Collectors.toList());
+            .stream()
+            .map(item -> new DisAdvantage(newPost, item))
+            .collect(Collectors.toList());
 
         request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
-                .stream().forEach(item-> item.setPost(newPost));
+            .stream().forEach(item -> item.setPost(newPost));
 
         return newPost;
     }
@@ -62,8 +63,8 @@ public class PostService {
     public List<PostResponse> readPostApi(Pageable pageable) {
         List<Post> posts = postRepository.findAllByPosts(pageable);
         return posts.stream()
-                .map(it -> PostResponse.of(it))
-                .collect(Collectors.toList());
+            .map(it -> PostResponse.of(it))
+            .collect(Collectors.toList());
     }
 
     public List<PostResponse> readPost(PostRequest request) {
@@ -79,8 +80,8 @@ public class PostService {
             int size = request.getRecordsPerPage();
             List<Post> allByPosts = postRepository.findAllByPosts(PageRequest.of(page, size));
             postResponses = allByPosts.stream()
-                    .map(it -> PostResponse.of(it))
-                    .collect(Collectors.toList());
+                .map(it -> PostResponse.of(it))
+                .collect(Collectors.toList());
         }
 
         return postResponses;
@@ -89,17 +90,27 @@ public class PostService {
     public List<PostResponse> findSearchPost(CommonRequestDto request) {
 
         PaginationInfo paginationInfo = new PaginationInfo(request);
-        paginationInfo.setTotalRecordCount(getSearchTypePostsTotalCount(request.getSearchType(), request.getSearchValue()));
+        paginationInfo.setTotalRecordCount(
+            getSearchTypePostsTotalCount(request.getSearchType(), request.getSearchValue()));
         request.setPaginationInfo(paginationInfo);
 
         int page = request.getPaginationInfo().getFirstRecordIndex();
         int size = request.getRecordsPerPage();
-        List<Post> posts = getSearchTypePosts(request.getSearchType(), request.getSearchValue(), PageRequest.of(page, size));
+        List<Post> posts = getSearchTypePosts(request.getSearchType(), request.getSearchValue(),
+            PageRequest.of(page, size));
 
         return posts.stream()
-                .map(it -> PostResponse.of(it))
-                .collect(Collectors.toList());
+            .map(it -> PostResponse.of(it))
+            .collect(Collectors.toList());
     }
+
+    public List<PostApiResponse> readRandomPost(int limit) {
+        List<Post> randomLimitPost = postRepository.findByRandomLimitPost(limit);
+        return randomLimitPost.stream()
+            .map(PostApiResponse::of)
+            .collect(Collectors.toList());
+    }
+
 
     private int getSearchTypePostsTotalCount(SearchType searchType, String searchValue) {
         long totalCount = 0;
@@ -111,12 +122,13 @@ public class PostService {
                 totalCount = postRepository.countLikeClimbingTitlePosts(searchValue);
                 break;
         }
-        log.info("전체 갯수 : "+totalCount);
+        log.info("전체 갯수 : " + totalCount);
 
-        return (int)totalCount;
+        return (int) totalCount;
     }
 
-    private List<Post> getSearchTypePosts(SearchType searchType, String searchValue, Pageable pageable) {
+    private List<Post> getSearchTypePosts(SearchType searchType, String searchValue,
+        Pageable pageable) {
         List<Post> posts = new ArrayList<>();
         switch (searchType) {
             case TITLE:
@@ -130,7 +142,8 @@ public class PostService {
     }
 
     public PostResponse findByIdPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("게시물을 찾을 수 없습니다."));
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new RuntimeException("게시물을 찾을 수 없습니다."));
         return PostResponse.of(post);
     }
 }

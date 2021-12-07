@@ -64,7 +64,6 @@ public class PostRequest extends CommonRequestDto {
                 .level(this.level)
                 .scaleType(this.scaleType)
                 .feature(this.feature)
-//                .advantages(this.advantages)
                 .build();
     }
 }
