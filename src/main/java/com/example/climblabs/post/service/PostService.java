@@ -105,7 +105,7 @@ public class PostService {
     }
 
     public List<PostApiResponse> readRandomPost(int limit) {
-        List<Post> randomLimitPost = postRepository.findByRandomLimitPost();
+        List<Post> randomLimitPost = postRepository.findByRandomLimitPost(limit);
         return randomLimitPost.stream()
             .map(PostApiResponse::of)
             .collect(Collectors.toList());
