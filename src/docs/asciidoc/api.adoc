@@ -1,0 +1,25 @@
+= ClimbLabs-Api REST API Guide
+이준희;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[[overview]]
+= v1.0 ClimbLabs Api 문서
+
+== 여긴어때
+
+=== 요청
+include::{snippets}/readRandomPostLimit/http-request.adoc[]
+
+=== 요청파라미터
+include::{snippets}/readRandomPostLimit/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/readRandomPostLimit/http-response.adoc[]
+include::{snippets}/readRandomPostLimit/response-fields.adoc[]
