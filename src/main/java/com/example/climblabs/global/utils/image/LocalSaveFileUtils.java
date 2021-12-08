@@ -11,10 +11,12 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Profile("prod")
 @Slf4j
 @Component
 public class LocalSaveFileUtils implements ImageStorageUtils {
@@ -40,7 +42,7 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
     }
 
     private String save(MultipartFile file, String fullPath) {
-        File newFile = new File(fullPath);
+        File newFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
         try {
             if (newFile.createNewFile()) {
                 log.info("파일생성");
