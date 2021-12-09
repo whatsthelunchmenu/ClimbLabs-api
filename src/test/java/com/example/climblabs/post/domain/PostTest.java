@@ -1,6 +1,7 @@
 package com.example.climblabs.post.domain;
 
 import com.example.climblabs.common.factory.MemberFactory;
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.member.domain.Member;
 import com.example.climblabs.member.domain.repository.MemberRepository;
 import com.example.climblabs.post.domain.Image.Image;
@@ -128,8 +129,11 @@ public class PostTest {
         Post post = Post.builder().build();
         Post savedPost = postRepository.save(post);
 
-        Image image1 = Image.builder().url("http://image1.png").build();
-        Image image2 = Image.builder().url("http://image2.png").build();
+        ImageFileDto imageFileDto1 = ImageFileDto.builder().name("image1").url("http://image1.png").build();
+        ImageFileDto imageFileDto2 = ImageFileDto.builder().name("image2").url("http://image2.png").build();
+
+        Image image1 = Image.builder().imageFileDto(imageFileDto1).build();
+        Image image2 = Image.builder().imageFileDto(imageFileDto2).build();
 
         image1.setPost(post);
         image2.setPost(post);

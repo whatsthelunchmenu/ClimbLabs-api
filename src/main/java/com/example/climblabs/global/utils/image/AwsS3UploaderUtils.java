@@ -1,30 +1,25 @@
 package com.example.climblabs.global.utils.image;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.climblabs.global.exception.OtherPlatformHttpException;
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Profile("local")
 @Slf4j
@@ -38,33 +33,31 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
     private String bucket;
 
     @Override
-    public List<String> saveToStorage(List<MultipartFile> images) {
-        if (CollectionUtils.isEmpty(images)) {
-            return new ArrayList<>();
-        }
-
-        List<Optional<File>> convertedFile = images.stream()
-                .map(it -> convert(it))
-                .collect(Collectors.toList());
-
-        return upload(convertedFile);
+    public List<ImageFileDto> saveToStorage(List<MultipartFile> images) {
+        List<File> files = convert(images);
+        return uploads(files);
     }
 
-    private List<String> upload(List<Optional<File>> convertedFile) {
+    private List<ImageFileDto> uploads(List<File> files) {
+        List<ImageFileDto> imageFileDtos = files.stream().map(upload()).collect(Collectors.toList());
+        removeFiles(files);
+        return imageFileDtos;
+    }
 
-        return convertedFile.stream().map(it -> {
-            File uploadFile = it.orElseGet(() -> {
-                try {
-                    return File.createTempFile("temp", ".png");
-                } catch (IOException e) {
-                    log.warn(e.getMessage());
-                }
-                return null;
-            });
-            String fileName = uploadFile.getName();
-            String convertedName = UUID.randomUUID() + getExtension(fileName);
-            return putS3(convertedName, uploadFile);
-        }).collect(Collectors.toList());
+    private Function<File, ImageFileDto> upload() {
+        return file -> {
+            String convertName = UUID.randomUUID() + getExtension(file.getName());
+            String urlPath = putS3(convertName, file);
+            return ImageFileDto.builder()
+                    .name(convertName)
+                    .url(urlPath)
+                    .build();
+        };
+    }
+
+    private void removeFiles(List<File> files) {
+        files.stream()
+                .forEach(it -> it.delete());
     }
 
     private String putS3(String fileName, File uploadFile) {
@@ -80,18 +73,32 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    private Optional<File> convert(MultipartFile file) {
-        File newFile = new File( System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        try {
-            if (newFile.createNewFile()) {
-                try (FileOutputStream stream = new FileOutputStream(newFile)) {
-                    stream.write(file.getBytes());
-                }
-                return Optional.of(newFile);
+    private List<File> convert(List<MultipartFile> images) {
+        return images.stream()
+                .map(toFile())
+                .collect(Collectors.toList());
+    }
+
+    private Function<MultipartFile, File> toFile() {
+        return multipartFile -> {
+            try {
+                return multipartFile.getResource().getFile();
+            } catch (IOException e) {
+                log.warn(e.getMessage());
+                return createTempFile(multipartFile);
             }
-        } catch (Exception ex) {
-            log.warn("MultipartFIle -> File Convert fail~!!!");
+        };
+    }
+
+    private File createTempFile(MultipartFile multipartFile) {
+        try {
+            File tempFile = File.createTempFile("temp", ".jpg", null);
+            try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+                stream.write(multipartFile.getBytes());
+                return tempFile;
+            }
+        } catch (IOException e) {
+            throw new OtherPlatformHttpException();
         }
-        return Optional.empty();
     }
 }
