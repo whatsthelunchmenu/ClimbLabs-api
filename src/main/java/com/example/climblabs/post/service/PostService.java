@@ -46,13 +46,13 @@ public class PostService {
         Post newPost = request.getPost();
         request.getAdvantages()
             .stream()
-            .map(item -> new Advantage(newPost, item))
-            .collect(Collectors.toList());
+            .forEach(item -> new Advantage(newPost, item));
+//            .collect(Collectors.toList());
 
         request.getDisAdvantages()
             .stream()
-            .map(item -> new DisAdvantage(newPost, item))
-            .collect(Collectors.toList());
+            .forEach(item -> new DisAdvantage(newPost, item));
+//            .collect(Collectors.toList());
 
         request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
             .stream().forEach(item -> item.setPost(newPost));

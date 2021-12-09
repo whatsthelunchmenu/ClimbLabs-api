@@ -1,5 +1,6 @@
 package com.example.climblabs.post.domain.Image;
 
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Post;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     private String url;
 
     @ManyToOne
@@ -21,8 +24,9 @@ public class Image {
     private Post post;
 
     @Builder
-    public Image(String url){
-        this.url = url;
+    public Image(ImageFileDto imageFileDto){
+        this.name = imageFileDto.getName();
+        this.url = imageFileDto.getUrl();
     }
 
     public String getUrl(){

@@ -7,51 +7,73 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.example.climblabs.global.exception.OtherPlatformHttpException;
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Profile("prod")
 @Slf4j
 @Component
 public class LocalSaveFileUtils implements ImageStorageUtils {
 
-    @Override
-    public List<String> saveToStorage(List<MultipartFile> images) {
-        if (CollectionUtils.isEmpty(images)) {
-            return new ArrayList<>();
-        }
 
-        return saveImageFile(images);
+    @Override
+    public List<ImageFileDto> saveToStorage(List<MultipartFile> images) {
+
+        List<File> files = convertMultipartFileToFile(images);
+
+        return saveImageFile(files);
     }
 
-    private List<String> saveImageFile(List<MultipartFile> images) {
-        return images.parallelStream().map(it -> convertMultipartFileToFile(it))
+    private List<ImageFileDto> saveImageFile(List<File> images) {
+        return images.stream()
+                .map(saveFile())
                 .collect(Collectors.toList());
     }
 
-    private String convertMultipartFileToFile(MultipartFile multipartFile) {
-        String extension = getExtension(multipartFile.getOriginalFilename());
-        String fullPath = System.getProperty("user.dir") + "/" + UUID.randomUUID() + extension;
-        return save(multipartFile, fullPath);
+    private Function<File, ImageFileDto> saveFile() {
+        return file -> {
+            String fileName = UUID.randomUUID().toString();
+            String extension = getExtension(file.getName());
+            String fullPath = System.getProperty("user.dir") + "/" + fileName + extension;
+            return ImageFileDto.builder()
+                    .name(fileName)
+                    .url(fullPath)
+                    .build();
+        };
     }
 
-    private String save(MultipartFile file, String fullPath) {
-        File newFile = new File(fullPath);
+    private List<File> convertMultipartFileToFile(List<MultipartFile> images) {
+        return images.stream()
+                .map(it -> toFile(it))
+                .collect(Collectors.toList());
+    }
+
+    private File toFile(MultipartFile it) {
         try {
-            if (newFile.createNewFile()) {
-                log.info("파일생성");
-                try (FileOutputStream stream = new FileOutputStream(newFile)) {
-                    stream.write(file.getBytes());
-                }
+            return it.getResource().getFile();
+        } catch (Exception ex) {
+            return createTempFile(it);
+        }
+    }
+
+    private File createTempFile(MultipartFile multipartFile) {
+        try {
+            File file = File.createTempFile("temp", ".jpg", null);
+            try (FileOutputStream stream = new FileOutputStream(file)) {
+                stream.write(multipartFile.getBytes());
+                return file;
             }
-            return fullPath;
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-            return "";
+        } catch (Exception ex) {
+            throw new OtherPlatformHttpException();
         }
     }
 

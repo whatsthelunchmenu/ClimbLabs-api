@@ -1,6 +1,7 @@
 package com.example.climblabs.post.web.dto;
 
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
@@ -49,7 +50,7 @@ public class PostRequest extends CommonRequestDto {
         return items.stream().map(DisAdvantage::new).collect(Collectors.toSet());
     }
 
-    public List<Image> convertImages(List<String> items) {
+    public List<Image> convertImages(List<ImageFileDto> items) {
         if (CollectionUtils.isEmpty(items)) {
             return Collections.emptyList();
         }
