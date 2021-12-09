@@ -20,12 +20,6 @@ public class AmazonS3Config {
     @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
-    //    @Bean
-//    public AmazonS3Client amazonS3Client(){
-//        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-//                .withRegion(region)
-//                .build();
-//    }
     @Bean
     public AmazonS3Client amazonS3Client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
