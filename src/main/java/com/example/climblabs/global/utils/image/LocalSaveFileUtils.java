@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-@Profile("prod")
+@Profile("dev")
 @Slf4j
 @Component
 public class LocalSaveFileUtils implements ImageStorageUtils {

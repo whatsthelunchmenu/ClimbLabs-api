@@ -1,0 +1,16 @@
+
+spring:
+
+  profiles:
+    include: aws,real-db
+
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  devtools:
+    livereload:
+      enabled: false

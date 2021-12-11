@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Profile("local")
+@Profile("prod")
 @Slf4j
 @RequiredArgsConstructor
 @Component

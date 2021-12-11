@@ -1,0 +1,32 @@
+
+spring:
+
+  config:
+    import: classpath:aws.yml
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
+      username: sa
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    defer-datasource-initialization: true # h2 DB 초기데이터 추가하기위한 설정
+#    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        default_batch_fetch_size: 1000
+        format_sql: true
+
+  #서버배포 시 서버에 상당한 부담이 되므로 false 적용할 것
+  devtools:
+    livereload:
+      enabled: true
