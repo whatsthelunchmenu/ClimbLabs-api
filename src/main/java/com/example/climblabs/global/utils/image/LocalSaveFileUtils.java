@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-@Profile("dev")
+@Profile(value = {"local", "dev"})
 @Slf4j
 @Component
 public class LocalSaveFileUtils implements ImageStorageUtils {
@@ -35,8 +35,8 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
 
     private List<ImageFileDto> saveImageFile(List<File> images) {
         return images.stream()
-                .map(saveFile())
-                .collect(Collectors.toList());
+            .map(saveFile())
+            .collect(Collectors.toList());
     }
 
     private Function<File, ImageFileDto> saveFile() {
@@ -45,16 +45,16 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
             String extension = getExtension(file.getName());
             String fullPath = System.getProperty("user.dir") + "/" + fileName + extension;
             return ImageFileDto.builder()
-                    .name(fileName)
-                    .url(fullPath)
-                    .build();
+                .name(fileName)
+                .url(fullPath)
+                .build();
         };
     }
 
     private List<File> convertMultipartFileToFile(List<MultipartFile> images) {
         return images.stream()
-                .map(it -> toFile(it))
-                .collect(Collectors.toList());
+            .map(it -> toFile(it))
+            .collect(Collectors.toList());
     }
 
     private File toFile(MultipartFile it) {
