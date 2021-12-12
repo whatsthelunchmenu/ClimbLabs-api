@@ -1,10 +1,11 @@
-
 spring:
-
   profiles:
-    include: aws,real-db
-
+    include:
+      - aws
+        real-db
   jpa:
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
         default_batch_fetch_size: 1000
@@ -19,3 +20,10 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
