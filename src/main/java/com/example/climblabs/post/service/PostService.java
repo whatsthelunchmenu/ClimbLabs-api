@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -146,13 +148,11 @@ public class PostService {
         return PostResponse.of(post);
     }
 
-    public PostScaleTypeResponse readFilterScaleType(int limit, List<ScaleType> scaleTypes) {
+    public PostScaleTypeResponse readFilterScaleType(int limit, Optional<List<ScaleType>> scaleTypes) {
 
-        List<Post> postList = scaleTypes.stream()
-                .map(type -> {
-                    log.info("타입 : "+type + " 제한 : "+limit);
-                    return postRepository.findByRandomScaleTypeLimit(type.toString(), limit);
-                })
+        List<ScaleType> types = scaleTypes.orElseGet(getBaseScaleType());
+        List<Post> postList = types.stream()
+                .map(type -> postRepository.findByRandomScaleTypeLimit(type.toString(), limit))
                 .flatMap(it -> it.stream())
                 .collect(Collectors.toList());
 
@@ -161,6 +161,15 @@ public class PostService {
         List<PostApiResponse> smallTypePosts = getTypePosts(postList, ScaleType.SMALL);
 
         return new PostScaleTypeResponse(bigTypePosts, middleTypePosts, smallTypePosts);
+    }
+
+    private Supplier<List<ScaleType>> getBaseScaleType(){
+        return () -> {
+            List<ScaleType> types = new ArrayList<>();
+            types.add(ScaleType.BIG);
+            types.add(ScaleType.MIDDLE);
+            return types;
+        };
     }
 
     private List<PostApiResponse> getTypePosts(List<Post> posts, ScaleType type){

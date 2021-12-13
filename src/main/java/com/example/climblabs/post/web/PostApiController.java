@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +49,8 @@ public class PostApiController {
 
     @GetMapping("/posts/random")
     public ResponseEntity<?> readPostFromSacleType(PostScaleTypeRequest request) {
-        return  ResponseEntity.ok(postService.readFilterScaleType(request.getLimit(), request.getScaleTypes()));
+        Optional<List<ScaleType>> scaleTypes = Optional.ofNullable(request.getScaleTypes());
+        return  ResponseEntity.ok(postService.readFilterScaleType(request.getLimit(), scaleTypes));
     }
 
 }

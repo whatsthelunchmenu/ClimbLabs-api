@@ -28,6 +28,8 @@ public class PostApiResponse {
 
     private String detailStreet;
 
+    private Integer scale;
+
     private ScaleType scaleType;
 
     private String feature;
@@ -40,18 +42,19 @@ public class PostApiResponse {
 
     @Builder
     public PostApiResponse(Long id,
-                        String title,
-                        String climbingTitle,
-                        int level,
-                        String city,
-                        String zipCode,
-                        String street,
-                        String detailStreet,
-                        ScaleType scaleType,
-                        String feature,
-                        List<String> advantages,
-                        List<String> disAdvantages,
-                        List<String> images) {
+                           String title,
+                           String climbingTitle,
+                           int level,
+                           String city,
+                           String zipCode,
+                           String street,
+                           String detailStreet,
+                           Integer scale,
+                           ScaleType scaleType,
+                           String feature,
+                           List<String> advantages,
+                           List<String> disAdvantages,
+                           List<String> images) {
         this.id = id;
         this.title = title;
         this.climbingTitle = climbingTitle;
@@ -60,6 +63,7 @@ public class PostApiResponse {
         this.zipCode = zipCode;
         this.street = street;
         this.detailStreet = detailStreet;
+        this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
         this.advantages = advantages;
@@ -82,6 +86,7 @@ public class PostApiResponse {
                 .zipCode(it.getAddress().getZipCode())
                 .street(it.getAddress().getStreet())
                 .detailStreet(it.getAddress().getDetailStreet())
+                .scale(it.getScale())
                 .scaleType(it.getScaleType())
                 .feature(it.getFeature())
                 .advantages(advantageList)

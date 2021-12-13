@@ -23,3 +23,15 @@ include::{snippets}/readRandomPostLimit/path-parameters.adoc[]
 === 응답
 include::{snippets}/readRandomPostLimit/http-response.adoc[]
 include::{snippets}/readRandomPostLimit/response-fields.adoc[]
+
+== 여긴 이만해
+
+=== 요청
+include::{snippets}/randomPostScaleTypeLimitTest/http-request.adoc[]
+
+=== 요청파라미터
+include::{snippets}/randomPostScaleTypeLimitTest/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/randomPostScaleTypeLimitTest/http-response.adoc[]
+include::{snippets}/randomPostScaleTypeLimitTest/response-fields.adoc[]
