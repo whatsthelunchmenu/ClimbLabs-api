@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.climblabs.global.exception.OtherPlatformHttpException;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Component
 public class AwsS3UploaderUtils implements ImageStorageUtils {
 
+    private static String S3_DIRECTORY = "image";
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -39,44 +41,53 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
     }
 
     private List<ImageFileDto> uploads(List<File> files) {
-        List<ImageFileDto> imageFileDtos = files.stream().map(upload()).collect(Collectors.toList());
+        List<ImageFileDto> imageFileDtos = files.stream().map(upload())
+            .collect(Collectors.toList());
         removeFiles(files);
         return imageFileDtos;
     }
 
     private Function<File, ImageFileDto> upload() {
         return file -> {
-            String convertName = UUID.randomUUID() + getExtension(file.getName());
+            String convertName = S3_DIRECTORY
+                + "/"
+                + UUID.randomUUID()
+                + getExtension(file.getName());
+
             String urlPath = putS3(convertName, file);
             return ImageFileDto.builder()
-                    .name(convertName)
-                    .url(urlPath)
-                    .build();
+                .name(convertName)
+                .url(urlPath)
+                .build();
         };
     }
 
     private void removeFiles(List<File> files) {
-        files.stream()
-                .forEach(it -> it.delete());
+        files.forEach(it -> {
+            boolean result = it.delete();
+            if (!result) {
+                log.info("파일을 삭제하지 못했습니다.");
+            }
+        });
     }
 
     private String putS3(String fileName, File uploadFile) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+            .withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     private String getExtension(String fileName) {
-        if (Strings.isEmpty(fileName)) {
-            return "";
-        }
-        return fileName.substring(fileName.lastIndexOf("."));
+        String name = Optional.ofNullable(fileName)
+            .orElseThrow(IllegalArgumentException::new);
+
+        return name.substring(name.lastIndexOf("."));
     }
 
     private List<File> convert(List<MultipartFile> images) {
         return images.stream()
-                .map(toFile())
-                .collect(Collectors.toList());
+            .map(toFile())
+            .collect(Collectors.toList());
     }
 
     private Function<MultipartFile, File> toFile() {
