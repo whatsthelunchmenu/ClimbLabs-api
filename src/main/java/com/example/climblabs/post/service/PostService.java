@@ -9,8 +9,8 @@ import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
-import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.request.PostRequest;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -112,7 +110,6 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-
     private int getSearchTypePostsTotalCount(SearchType searchType, String searchValue) {
         long totalCount = 0;
         switch (searchType) {
@@ -163,7 +160,7 @@ public class PostService {
         return new PostScaleTypeResponse(bigTypePosts, middleTypePosts, smallTypePosts);
     }
 
-    private Supplier<List<ScaleType>> getBaseScaleType(){
+    private Supplier<List<ScaleType>> getBaseScaleType() {
         return () -> {
             List<ScaleType> types = new ArrayList<>();
             types.add(ScaleType.BIG);
@@ -172,7 +169,7 @@ public class PostService {
         };
     }
 
-    private List<PostApiResponse> getTypePosts(List<Post> posts, ScaleType type){
+    private List<PostApiResponse> getTypePosts(List<Post> posts, ScaleType type) {
         return posts.stream()
                 .filter(it -> it.getScaleType() == type)
                 .map(it -> PostApiResponse.of(it))
