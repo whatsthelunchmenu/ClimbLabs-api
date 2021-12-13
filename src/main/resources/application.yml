@@ -1,9 +1,8 @@
 
 spring:
 
-  profiles:
-    include: aws
-    active: local
+#  config:
+#    import: classpath:aws.yml
 
   h2:
     console:
@@ -12,24 +11,29 @@ spring:
   datasource:
     hikari:
       jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
-#      jdbc-url: jdbc:h2:file:D:/june/ClimbLabs-api/testdb
       username: sa
     driver-class-name: org.h2.Driver
 
   jpa:
     defer-datasource-initialization: true # h2 DB 초기데이터 추가하기위한 설정
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-#    generate-ddl: true
     show-sql: true
     properties:
       hibernate:
         default_batch_fetch_size: 1000
         format_sql: true
 
-#서버배포 시 서버에 상당한 부담이 되므로 false 적용할 것
+  #서버배포 시 서버에 상당한 부담이 되므로 false 적용할 것
   devtools:
     livereload:
       enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
 
