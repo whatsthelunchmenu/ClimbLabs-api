@@ -1,4 +1,4 @@
-package com.example.climblabs.post.web.dto;
+package com.example.climblabs.post.web.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

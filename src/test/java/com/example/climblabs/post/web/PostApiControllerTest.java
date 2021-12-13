@@ -3,8 +3,8 @@ package com.example.climblabs.post.web;
 
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.service.PostService;
-import com.example.climblabs.post.web.dto.PostApiResponse;
-import com.example.climblabs.post.web.dto.PostRequest;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
+import com.example.climblabs.post.web.dto.request.PostRequest;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

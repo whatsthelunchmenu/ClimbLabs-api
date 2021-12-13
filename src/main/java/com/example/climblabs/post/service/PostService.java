@@ -4,14 +4,15 @@ import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.global.utils.common.SearchType;
 import com.example.climblabs.global.utils.image.ImageStorageUtils;
 import com.example.climblabs.global.utils.pagination.PaginationInfo;
-import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
+import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
-import com.example.climblabs.post.web.dto.PostApiResponse;
-import com.example.climblabs.post.web.dto.PostRequest;
-import com.example.climblabs.post.web.dto.PostResponse;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
+import com.example.climblabs.post.web.dto.request.PostRequest;
+import com.example.climblabs.post.web.dto.response.PostResponse;
+import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,17 +46,15 @@ public class PostService {
 
         Post newPost = request.getPost();
         request.getAdvantages()
-            .stream()
-            .forEach(item -> new Advantage(newPost, item));
-//            .collect(Collectors.toList());
+                .stream()
+                .forEach(item -> new Advantage(newPost, item));
 
         request.getDisAdvantages()
-            .stream()
-            .forEach(item -> new DisAdvantage(newPost, item));
-//            .collect(Collectors.toList());
+                .stream()
+                .forEach(item -> new DisAdvantage(newPost, item));
 
         request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
-            .stream().forEach(item -> item.setPost(newPost));
+                .stream().forEach(item -> item.setPost(newPost));
 
         return newPost;
     }
@@ -63,8 +62,8 @@ public class PostService {
     public List<PostResponse> readPostApi(Pageable pageable) {
         List<Post> posts = postRepository.findAllByPosts(pageable);
         return posts.stream()
-            .map(it -> PostResponse.of(it))
-            .collect(Collectors.toList());
+                .map(it -> PostResponse.of(it))
+                .collect(Collectors.toList());
     }
 
     public List<PostResponse> readPost(PostRequest request) {
@@ -80,8 +79,8 @@ public class PostService {
             int size = request.getRecordsPerPage();
             List<Post> allByPosts = postRepository.findAllByPosts(PageRequest.of(page, size));
             postResponses = allByPosts.stream()
-                .map(it -> PostResponse.of(it))
-                .collect(Collectors.toList());
+                    .map(it -> PostResponse.of(it))
+                    .collect(Collectors.toList());
         }
 
         return postResponses;
@@ -91,24 +90,24 @@ public class PostService {
 
         PaginationInfo paginationInfo = new PaginationInfo(request);
         paginationInfo.setTotalRecordCount(
-            getSearchTypePostsTotalCount(request.getSearchType(), request.getSearchValue()));
+                getSearchTypePostsTotalCount(request.getSearchType(), request.getSearchValue()));
         request.setPaginationInfo(paginationInfo);
 
         int page = request.getPaginationInfo().getFirstRecordIndex();
         int size = request.getRecordsPerPage();
         List<Post> posts = getSearchTypePosts(request.getSearchType(), request.getSearchValue(),
-            PageRequest.of(page, size));
+                PageRequest.of(page, size));
 
         return posts.stream()
-            .map(it -> PostResponse.of(it))
-            .collect(Collectors.toList());
+                .map(it -> PostResponse.of(it))
+                .collect(Collectors.toList());
     }
 
     public List<PostApiResponse> readRandomPost(int limit) {
         List<Post> randomLimitPost = postRepository.findByRandomLimitPost(limit);
         return randomLimitPost.stream()
-            .map(PostApiResponse::of)
-            .collect(Collectors.toList());
+                .map(PostApiResponse::of)
+                .collect(Collectors.toList());
     }
 
 
@@ -128,7 +127,7 @@ public class PostService {
     }
 
     private List<Post> getSearchTypePosts(SearchType searchType, String searchValue,
-        Pageable pageable) {
+                                          Pageable pageable) {
         List<Post> posts = new ArrayList<>();
         switch (searchType) {
             case TITLE:
@@ -143,7 +142,32 @@ public class PostService {
 
     public PostResponse findByIdPost(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new RuntimeException("게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("게시물을 찾을 수 없습니다."));
         return PostResponse.of(post);
     }
+
+    public PostScaleTypeResponse readFilterScaleType(int limit, List<ScaleType> scaleTypes) {
+
+        List<Post> postList = scaleTypes.stream()
+                .map(type -> {
+                    log.info("타입 : "+type + " 제한 : "+limit);
+                    return postRepository.findByRandomScaleTypeLimit(type.toString(), limit);
+                })
+                .flatMap(it -> it.stream())
+                .collect(Collectors.toList());
+
+        List<PostApiResponse> bigTypePosts = getTypePosts(postList, ScaleType.BIG);
+        List<PostApiResponse> middleTypePosts = getTypePosts(postList, ScaleType.MIDDLE);
+        List<PostApiResponse> smallTypePosts = getTypePosts(postList, ScaleType.SMALL);
+
+        return new PostScaleTypeResponse(bigTypePosts, middleTypePosts, smallTypePosts);
+    }
+
+    private List<PostApiResponse> getTypePosts(List<Post> posts, ScaleType type){
+        return posts.stream()
+                .filter(it -> it.getScaleType() == type)
+                .map(it -> PostApiResponse.of(it))
+                .collect(Collectors.toList());
+    }
+
 }

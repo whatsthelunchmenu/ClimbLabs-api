@@ -1,6 +1,7 @@
 package com.example.climblabs.post.domain.repository;
 
 import com.example.climblabs.post.domain.Post;
+import com.example.climblabs.post.domain.ScaleType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "select * from post order by rand() limit :limit", nativeQuery = true)
     List<Post> findByRandomLimitPost(int limit);
+
+    @Query(value = "select * from post where scale_type = :scaleType order by rand() limit :limit", nativeQuery = true)
+    List<Post> findByRandomScaleTypeLimit(String scaleType, Integer limit);
 }

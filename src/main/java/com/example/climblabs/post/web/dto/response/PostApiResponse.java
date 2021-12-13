@@ -1,4 +1,4 @@
-package com.example.climblabs.post.web.dto;
+package com.example.climblabs.post.web.dto.response;
 
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
