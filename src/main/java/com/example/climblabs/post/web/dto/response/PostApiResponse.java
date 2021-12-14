@@ -1,5 +1,6 @@
 package com.example.climblabs.post.web.dto.response;
 
+import com.example.climblabs.post.domain.Address;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -76,16 +78,16 @@ public class PostApiResponse {
         List<String> advantageList = it.getAdvantageResponseFrom(it.getAdvantages());
         List<String> disAdvantiageList = it.getDisAdvantageResponseFrom(it.getDisAdvantages());
         List<String> imageList = it.getImageResponseFrom(it.getImages());
-
+        Address address = Optional.ofNullable(it.getAddress()).orElse(new Address());
         return PostApiResponse.builder()
                 .id(it.getId())
                 .title(it.getTitle())
                 .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
-                .city(it.getAddress().getCity())
-                .zipCode(it.getAddress().getZipCode())
-                .street(it.getAddress().getStreet())
-                .detailStreet(it.getAddress().getDetailStreet())
+                .city(address.getCity())
+                .zipCode(address.getZipCode())
+                .street(address.getStreet())
+                .detailStreet(address.getDetailStreet())
                 .scale(it.getScale())
                 .scaleType(it.getScaleType())
                 .feature(it.getFeature())
