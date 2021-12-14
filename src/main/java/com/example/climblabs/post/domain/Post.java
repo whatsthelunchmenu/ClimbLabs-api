@@ -34,6 +34,8 @@ public class Post {
     @Embedded
     private Address address;
 
+    private Integer scale;
+
     @Enumerated(EnumType.STRING)
     private ScaleType scaleType;
 
@@ -61,6 +63,7 @@ public class Post {
             String title,
             String climbingTitle,
             int level,
+            int scale,
             Address address,
             ScaleType scaleType,
             String feature
@@ -69,6 +72,7 @@ public class Post {
         this.climbingTitle = climbingTitle;
         this.level = level;
         this.address = address;
+        this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
         this.createdAt = LocalDateTime.now();

@@ -1,4 +1,4 @@
-package com.example.climblabs.post.web.dto;
+package com.example.climblabs.post.web.dto.response;
 
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.post.domain.Post;
