@@ -40,6 +40,9 @@ dependencies {
     //AWS S3 의존성 추가
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
 
+    //mariadb 의존성 추가
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -89,4 +92,10 @@ bootJar {
 
 build {
     dependsOn('copyDocument')
+}
+
+jar {
+    // springboot v2.5 이상부터는 빌드 시 plain 아카이브가 생성된다.
+    // docker로 배포하기위해서는 하나의 jar만 필요함으로 plan.jar를 제거하기위한 설정
+    enabled = false
 }
