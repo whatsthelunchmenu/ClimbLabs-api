@@ -3,6 +3,7 @@ package com.example.climblabs.post.web.dto.request;
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Address;
+import com.example.climblabs.post.domain.Thumbnail;
 import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
@@ -32,6 +33,7 @@ public class PostRequest extends CommonRequestDto {
     private Integer scale;
     private ScaleType scaleType;
     private String feature;
+    private MultipartFile thumbNailImage;
     private List<MultipartFile> images;
     private List<String> advantages;
     private List<String> disAdvantages;

@@ -30,6 +30,9 @@ public class Post {
     private int level;
 
     @Embedded
+    private Thumbnail thumbnail;
+
+    @Embedded
     private Address address;
 
     private Integer scale;
@@ -62,6 +65,7 @@ public class Post {
             int level,
             Integer scale,
             Address address,
+            Thumbnail thumbnail,
             ScaleType scaleType,
             String feature
     ) {
@@ -71,6 +75,7 @@ public class Post {
         this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
+        this.thumbnail = thumbnail;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -101,6 +106,4 @@ public class Post {
         this.member = member;
         member.getPost().add(this);
     }
-
-
 }
