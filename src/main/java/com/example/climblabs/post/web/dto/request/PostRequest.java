@@ -3,7 +3,7 @@ package com.example.climblabs.post.web.dto.request;
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Address;
-import com.example.climblabs.post.domain.Image.Image;
+import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;

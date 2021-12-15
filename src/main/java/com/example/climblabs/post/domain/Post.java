@@ -1,7 +1,7 @@
 package com.example.climblabs.post.domain;
 
 import com.example.climblabs.member.domain.Member;
-import com.example.climblabs.post.domain.Image.Image;
+import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.example.climblabs.post.domain.Image;
+package com.example.climblabs.post.domain.content;
 
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Post;
