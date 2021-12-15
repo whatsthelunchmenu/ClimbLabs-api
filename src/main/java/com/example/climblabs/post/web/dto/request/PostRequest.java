@@ -2,14 +2,13 @@ package com.example.climblabs.post.web.dto.request;
 
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
+import com.example.climblabs.post.domain.Address;
 import com.example.climblabs.post.domain.Image.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -25,11 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostRequest extends CommonRequestDto {
 
     private String title;
-    private String climbingTitle;
     private Integer level;
+    private String city;
     private String zipCode;
-    private String address;
-    private String detailAddress;
+    private String street;
+    private String detailStreet;
+    private Integer scale;
     private ScaleType scaleType;
     private String feature;
     private List<MultipartFile> images;
@@ -62,8 +62,15 @@ public class PostRequest extends CommonRequestDto {
         return Post.builder()
                 .title(this.title)
                 .level(this.level)
+                .scale(this.scale)
                 .scaleType(this.scaleType)
                 .feature(this.feature)
+                .address(Address.builder()
+                        .city(this.city)
+                        .zipCode(this.zipCode)
+                        .street(this.street)
+                        .detailStreet(this.detailStreet)
+                        .build())
                 .build();
     }
 }

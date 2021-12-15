@@ -1,10 +1,8 @@
 package com.example.climblabs.post.domain;
 
 import javax.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

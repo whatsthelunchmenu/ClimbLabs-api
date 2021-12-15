@@ -60,7 +60,7 @@ public class Post {
     public Post(
             String title,
             int level,
-            int scale,
+            Integer scale,
             Address address,
             ScaleType scaleType,
             String feature
