@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SearchType {
-    TITLE("제목"),
-    CLIMBING_TITLE("암장이름")
+    TITLE("암장이름"),
     ;
 
     private final String typeValue;

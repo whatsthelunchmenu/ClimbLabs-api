@@ -51,8 +51,7 @@ public class PostTest {
         memberRepository.save(member);
 
         Post post = Post.builder()
-                .title("제목")
-                .climbingTitle("암장이름")
+                .title("암장이름")
                 .level(1)
                 .scaleType(ScaleType.BIG)
                 .feature("특징")

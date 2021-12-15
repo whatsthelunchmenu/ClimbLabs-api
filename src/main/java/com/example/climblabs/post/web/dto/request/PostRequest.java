@@ -61,7 +61,6 @@ public class PostRequest extends CommonRequestDto {
 
         return Post.builder()
                 .title(this.title)
-                .climbingTitle(this.climbingTitle)
                 .level(this.level)
                 .scaleType(this.scaleType)
                 .feature(this.feature)

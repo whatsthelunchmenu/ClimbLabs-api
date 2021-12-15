@@ -27,8 +27,6 @@ public class Post {
 
     private String title;
 
-    private String climbingTitle;
-
     private int level;
 
     @Embedded
@@ -61,7 +59,6 @@ public class Post {
     @Builder
     public Post(
             String title,
-            String climbingTitle,
             int level,
             int scale,
             Address address,
@@ -69,7 +66,6 @@ public class Post {
             String feature
     ) {
         this.title = title;
-        this.climbingTitle = climbingTitle;
         this.level = level;
         this.address = address;
         this.scale = scale;

@@ -3,8 +3,8 @@ package com.example.climblabs.post.web;
 
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.service.PostService;
-import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.request.PostRequest;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,7 +27,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -68,8 +68,7 @@ class PostApiControllerTest {
                 .build();
 
         files = new LinkedMultiValueMap<>();
-        files.add("title", "title");
-        files.add("climbingTitle", "climbingTitle");
+        files.add("title", "climbingTitle");
         files.add("level", "1");
 
         files.add("location", "location");
@@ -104,7 +103,6 @@ class PostApiControllerTest {
         return PostApiResponse.builder()
                 .id(id)
                 .title(title)
-                .climbingTitle("클라이밍장")
                 .level(3)
                 .city("경기")
                 .zipCode("15125")
@@ -148,8 +146,7 @@ class PostApiControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
-                                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("게시물 제목"),
-                                        fieldWithPath("[].climbingTitle").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
                                         fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
@@ -210,8 +207,7 @@ class PostApiControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("bigs.[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
-                                        fieldWithPath("bigs.[].title").type(JsonFieldType.STRING).description("게시물 제목"),
-                                        fieldWithPath("bigs.[].climbingTitle").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("bigs.[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
                                         fieldWithPath("bigs.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("bigs.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("bigs.[].street").type(JsonFieldType.STRING).description("위치"),
@@ -225,8 +221,7 @@ class PostApiControllerTest {
                                         fieldWithPath("bigs.[].images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지"),
 
                                         fieldWithPath("middles.[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
-                                        fieldWithPath("middles.[].title").type(JsonFieldType.STRING).description("게시물 제목"),
-                                        fieldWithPath("middles.[].climbingTitle").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("middles.[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
                                         fieldWithPath("middles.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("middles.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("middles.[].street").type(JsonFieldType.STRING).description("위치"),

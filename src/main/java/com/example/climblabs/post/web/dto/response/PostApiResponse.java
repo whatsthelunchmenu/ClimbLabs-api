@@ -18,8 +18,6 @@ public class PostApiResponse {
 
     private String title;
 
-    private String climbingTitle;
-
     private int level;
 
     private String city;
@@ -45,7 +43,6 @@ public class PostApiResponse {
     @Builder
     public PostApiResponse(Long id,
                            String title,
-                           String climbingTitle,
                            int level,
                            String city,
                            String zipCode,
@@ -59,7 +56,6 @@ public class PostApiResponse {
                            List<String> images) {
         this.id = id;
         this.title = title;
-        this.climbingTitle = climbingTitle;
         this.level = level;
         this.city = city;
         this.zipCode = zipCode;
@@ -82,7 +78,6 @@ public class PostApiResponse {
         return PostApiResponse.builder()
                 .id(it.getId())
                 .title(it.getTitle())
-                .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
                 .city(address.getCity())
                 .zipCode(address.getZipCode())
