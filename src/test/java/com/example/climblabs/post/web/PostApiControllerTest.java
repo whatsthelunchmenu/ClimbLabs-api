@@ -111,9 +111,10 @@ class PostApiControllerTest {
                 .scale(84)
                 .scaleType(type)
                 .feature("암장 특징")
+                .thumbNailUrl("http://thumbNail.jpg")
                 .advantages(Lists.newArrayList("advance1", "advance2"))
                 .disAdvantages(Lists.newArrayList("disAdvance1", "disAdvance2"))
-                .images(Lists.newArrayList("image1", "image2"))
+                .images(Lists.newArrayList("http://image1.jpg", "http://image2.jpg"))
                 .build();
     }
 
@@ -147,6 +148,7 @@ class PostApiControllerTest {
                                 responseFields(
                                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
                                         fieldWithPath("[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("[].thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
                                         fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
@@ -208,6 +210,7 @@ class PostApiControllerTest {
                                 responseFields(
                                         fieldWithPath("bigs.[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
                                         fieldWithPath("bigs.[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("bigs.[].thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
                                         fieldWithPath("bigs.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("bigs.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("bigs.[].street").type(JsonFieldType.STRING).description("위치"),
@@ -222,6 +225,7 @@ class PostApiControllerTest {
 
                                         fieldWithPath("middles.[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
                                         fieldWithPath("middles.[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("middles.[].thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
                                         fieldWithPath("middles.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("middles.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("middles.[].street").type(JsonFieldType.STRING).description("위치"),

@@ -3,7 +3,7 @@ package com.example.climblabs.post.web.dto.request;
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Address;
-import com.example.climblabs.post.domain.Thumbnail;
+import com.example.climblabs.post.domain.ThumbNail;
 import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
@@ -57,6 +57,10 @@ public class PostRequest extends CommonRequestDto {
             return Collections.emptyList();
         }
         return items.stream().map(Image::new).collect(Collectors.toList());
+    }
+
+    public ThumbNail convertImage(ImageFileDto imageFileDto){
+        return new ThumbNail(imageFileDto);
     }
 
     public Post getPost() {

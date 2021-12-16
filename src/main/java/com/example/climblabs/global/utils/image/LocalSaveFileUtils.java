@@ -20,11 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class LocalSaveFileUtils implements ImageStorageUtils {
 
     @Override
-    public List<ImageFileDto> saveToStorage(List<MultipartFile> images) {
+    public List<ImageFileDto> saveToStorages(List<MultipartFile> images) {
 
         List<File> files = convertMultipartFileToFile(images);
-
         return saveImageFile(files);
+    }
+
+    @Override
+    public ImageFileDto saveToStorage(MultipartFile image) {
+        File file = toFile(image);
+        return saveFile().apply(file);
     }
 
     private List<ImageFileDto> saveImageFile(List<File> images) {
@@ -35,9 +40,8 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
 
     private Function<File, ImageFileDto> saveFile() {
         return file -> {
-            String fileName = UUID.randomUUID().toString();
-            String extension = getExtension(file.getName());
-            String fullPath = System.getProperty("user.dir") + "/" + fileName + extension;
+            String fileName = UUID.randomUUID() + getExtension(file.getName());
+            String fullPath = System.getProperty("user.dir") + "/" + fileName;
             return ImageFileDto.builder()
                 .name(fileName)
                 .url(fullPath)

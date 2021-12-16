@@ -3,6 +3,7 @@ package com.example.climblabs.post.web.dto.response;
 import com.example.climblabs.post.domain.Address;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
+import com.example.climblabs.post.domain.ThumbNail;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,8 @@ public class PostApiResponse {
 
     private String feature;
 
+    private String thumbNailUrl;
+
     private List<String> advantages;
 
     private List<String> disAdvantages;
@@ -51,6 +54,7 @@ public class PostApiResponse {
                            Integer scale,
                            ScaleType scaleType,
                            String feature,
+                           String thumbNailUrl,
                            List<String> advantages,
                            List<String> disAdvantages,
                            List<String> images) {
@@ -64,6 +68,7 @@ public class PostApiResponse {
         this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
+        this.thumbNailUrl = thumbNailUrl;
         this.advantages = advantages;
         this.disAdvantages = disAdvantages;
         this.images = images;
@@ -75,6 +80,8 @@ public class PostApiResponse {
         List<String> disAdvantiageList = it.getDisAdvantageResponseFrom(it.getDisAdvantages());
         List<String> imageList = it.getImageResponseFrom(it.getImages());
         Address address = Optional.ofNullable(it.getAddress()).orElse(new Address());
+        ThumbNail thumbNail = Optional.ofNullable(it.getThumbnail()).orElse(new ThumbNail());
+
         return PostApiResponse.builder()
                 .id(it.getId())
                 .title(it.getTitle())
@@ -86,6 +93,7 @@ public class PostApiResponse {
                 .scale(it.getScale())
                 .scaleType(it.getScaleType())
                 .feature(it.getFeature())
+                .thumbNailUrl(thumbNail.getThumbNailUrl())
                 .advantages(advantageList)
                 .disAdvantages(disAdvantiageList)
                 .images(imageList)

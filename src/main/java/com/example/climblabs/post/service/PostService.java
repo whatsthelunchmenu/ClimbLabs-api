@@ -53,9 +53,10 @@ public class PostService {
                 .stream()
                 .forEach(item -> new DisAdvantage(newPost, item));
 
-        request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
+        request.convertImages(imageStorageUtils.saveToStorages(request.getImages()))
                 .stream().forEach(item -> item.setPost(newPost));
 
+        newPost.setThumbnail(request.convertImage(imageStorageUtils.saveToStorage(request.getThumbNailImage())));
         return newPost;
     }
 

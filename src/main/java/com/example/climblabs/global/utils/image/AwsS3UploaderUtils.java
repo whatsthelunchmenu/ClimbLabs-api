@@ -5,10 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.climblabs.global.exception.OtherPlatformHttpException;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -18,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,9 +34,15 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
     private String bucket;
 
     @Override
-    public List<ImageFileDto> saveToStorage(List<MultipartFile> images) {
+    public List<ImageFileDto> saveToStorages(List<MultipartFile> images) {
         List<File> files = convert(images);
         return uploads(files);
+    }
+
+    @Override
+    public ImageFileDto saveToStorage(MultipartFile image) {
+        File file = toFile().apply(image);
+        return upload().apply(file);
     }
 
     private List<ImageFileDto> uploads(List<File> files) {
@@ -49,14 +54,12 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
 
     private Function<File, ImageFileDto> upload() {
         return file -> {
-            String convertName = S3_DIRECTORY
-                + "/"
-                + UUID.randomUUID()
-                + getExtension(file.getName());
+            String fileName = UUID.randomUUID() + getExtension(file.getName());
+            String path = S3_DIRECTORY + "/" + fileName;
+            String urlPath = putS3(path, file);
 
-            String urlPath = putS3(convertName, file);
             return ImageFileDto.builder()
-                .name(convertName)
+                .name(fileName)
                 .url(urlPath)
                 .build();
         };
@@ -71,10 +74,10 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
         });
     }
 
-    private String putS3(String fileName, File uploadFile) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+    private String putS3(String path, File uploadFile) {
+        amazonS3Client.putObject(new PutObjectRequest(bucket, path, uploadFile)
             .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(bucket, path).toString();
     }
 
     private String getExtension(String fileName) {

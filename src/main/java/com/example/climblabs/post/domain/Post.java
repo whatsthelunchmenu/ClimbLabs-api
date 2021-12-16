@@ -30,7 +30,7 @@ public class Post {
     private int level;
 
     @Embedded
-    private Thumbnail thumbnail;
+    private ThumbNail thumbnail;
 
     @Embedded
     private Address address;
@@ -65,7 +65,7 @@ public class Post {
             int level,
             Integer scale,
             Address address,
-            Thumbnail thumbnail,
+            ThumbNail thumbnail,
             ScaleType scaleType,
             String feature
     ) {
@@ -96,6 +96,10 @@ public class Post {
         return images.stream()
                 .map(Image::getUrl)
                 .collect(Collectors.toList());
+    }
+
+    public void setThumbnail(ThumbNail thumbnail){
+        this.thumbnail = thumbnail;
     }
 
     public void setMember(Member member) {
