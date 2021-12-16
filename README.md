@@ -15,7 +15,7 @@
 ## ERD
 
 <p align='center'>
-<img src="https://user-images.githubusercontent.com/39672033/145953841-1f209bd8-430b-481e-9c76-c85746754e58.png" width="90%" height="60%" >
+<img src="https://user-images.githubusercontent.com/39672033/146318716-dd6e1bbd-3dfc-4288-bec1-89ae88128807.png" width="90%" height="60%" >
 </p>
 
 ## Api Document
