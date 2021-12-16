@@ -7,5 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageStorageUtils {
 
-    List<ImageFileDto> saveToStorage(List<MultipartFile> images);
+    List<ImageFileDto> saveToStorages(List<MultipartFile> images);
+
+    ImageFileDto saveToStorage(MultipartFile image);
 }

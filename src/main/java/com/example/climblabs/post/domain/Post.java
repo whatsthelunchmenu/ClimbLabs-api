@@ -1,7 +1,7 @@
 package com.example.climblabs.post.domain;
 
 import com.example.climblabs.member.domain.Member;
-import com.example.climblabs.post.domain.Image.Image;
+import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import lombok.Builder;
@@ -27,9 +27,10 @@ public class Post {
 
     private String title;
 
-    private String climbingTitle;
-
     private int level;
+
+    @Embedded
+    private ThumbNail thumbnail;
 
     @Embedded
     private Address address;
@@ -61,20 +62,20 @@ public class Post {
     @Builder
     public Post(
             String title,
-            String climbingTitle,
             int level,
-            int scale,
+            Integer scale,
             Address address,
+            ThumbNail thumbnail,
             ScaleType scaleType,
             String feature
     ) {
         this.title = title;
-        this.climbingTitle = climbingTitle;
         this.level = level;
         this.address = address;
         this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
+        this.thumbnail = thumbnail;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -97,6 +98,10 @@ public class Post {
                 .collect(Collectors.toList());
     }
 
+    public void setThumbnail(ThumbNail thumbnail){
+        this.thumbnail = thumbnail;
+    }
+
     public void setMember(Member member) {
         // 기존 연관관계 제거
         if (this.member != null) {
@@ -105,6 +110,4 @@ public class Post {
         this.member = member;
         member.getPost().add(this);
     }
-
-
 }

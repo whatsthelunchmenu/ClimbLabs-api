@@ -53,9 +53,10 @@ public class PostService {
                 .stream()
                 .forEach(item -> new DisAdvantage(newPost, item));
 
-        request.convertImages(imageStorageUtils.saveToStorage(request.getImages()))
+        request.convertImages(imageStorageUtils.saveToStorages(request.getImages()))
                 .stream().forEach(item -> item.setPost(newPost));
 
+        newPost.setThumbnail(request.convertImage(imageStorageUtils.saveToStorage(request.getThumbNailImage())));
         return newPost;
     }
 
@@ -116,9 +117,6 @@ public class PostService {
             case TITLE:
                 totalCount = postRepository.countLikeTitlePosts(searchValue);
                 break;
-            case CLIMBING_TITLE:
-                totalCount = postRepository.countLikeClimbingTitlePosts(searchValue);
-                break;
         }
         log.info("전체 갯수 : " + totalCount);
 
@@ -131,9 +129,6 @@ public class PostService {
         switch (searchType) {
             case TITLE:
                 posts = postRepository.findLikeTitlePosts(searchValue, pageable);
-                break;
-            case CLIMBING_TITLE:
-                posts = postRepository.findLikeClimbingTitlePosts(searchValue, pageable);
                 break;
         }
         return posts;

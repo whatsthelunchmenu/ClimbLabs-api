@@ -4,7 +4,7 @@ import com.example.climblabs.common.factory.MemberFactory;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.member.domain.Member;
 import com.example.climblabs.member.domain.repository.MemberRepository;
-import com.example.climblabs.post.domain.Image.Image;
+import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.AdvantageRepository;
@@ -51,8 +51,7 @@ public class PostTest {
         memberRepository.save(member);
 
         Post post = Post.builder()
-                .title("제목")
-                .climbingTitle("암장이름")
+                .title("암장이름")
                 .level(1)
                 .scaleType(ScaleType.BIG)
                 .feature("특징")

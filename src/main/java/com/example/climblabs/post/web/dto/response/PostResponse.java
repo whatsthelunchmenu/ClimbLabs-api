@@ -72,7 +72,6 @@ public class PostResponse extends CommonRequestDto {
         return PostResponse.builder()
                 .id(it.getId())
                 .title(it.getTitle())
-                .climbingTitle(it.getClimbingTitle())
                 .level(it.getLevel())
 //                .zipCode(it.getZipCode())
 //                .address(it.getAddress())
