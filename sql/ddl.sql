@@ -39,17 +39,18 @@ create table post (
     detail_street varchar(255),
     street varchar(255),
     zip_code varchar(255),
-    climbing_title varchar(255),
     created_at datetime,
     feature varchar(255),
     level integer not null,
     scale integer,
     scale_type varchar(255),
+    thumb_nail_name varchar(255),
+    thumb_nail_url varchar(255),
     title varchar(255),
     updated_at datetime,
     member_id bigint,
     primary key (post_id)
-) engine=InnoDB
+) engine=InnoDB;
 
 
 alter table advantage
