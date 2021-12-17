@@ -35,3 +35,15 @@ include::{snippets}/randomPostScaleTypeLimitTest/request-parameters.adoc[]
 === 응답
 include::{snippets}/randomPostScaleTypeLimitTest/http-response.adoc[]
 include::{snippets}/randomPostScaleTypeLimitTest/response-fields.adoc[]
+
+== 암장 검색
+
+=== 요청
+include::{snippets}/searchTest/http-request.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/searchTest/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/searchTest/http-response.adoc[]
+include::{snippets}/searchTest/response-fields.adoc[]
