@@ -10,6 +10,7 @@ import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
 import com.example.climblabs.post.web.dto.request.PostRequest;
+import com.example.climblabs.post.web.dto.request.PostSearchRequest;
 import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
@@ -171,4 +172,11 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostApiResponse> search(String searchValue, Pageable pageable) {
+        log.info(searchValue);
+        return postRepository.findLikeTitlePosts(searchValue, pageable)
+                .stream()
+                .map(it -> PostApiResponse.of(it))
+                .collect(Collectors.toList());
+    }
 }

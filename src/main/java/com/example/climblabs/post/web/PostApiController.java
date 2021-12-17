@@ -4,6 +4,8 @@ package com.example.climblabs.post.web;
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.service.PostService;
 import com.example.climblabs.post.web.dto.request.PostScaleTypeRequest;
+import com.example.climblabs.post.web.dto.request.PostSearchRequest;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostIdResponse;
 import com.example.climblabs.post.web.dto.request.PostRequest;
 import com.example.climblabs.post.web.dto.response.PostResponse;
@@ -50,7 +52,13 @@ public class PostApiController {
     @GetMapping("/posts/random")
     public ResponseEntity<?> readPostFromSacleType(PostScaleTypeRequest request) {
         Optional<List<ScaleType>> scaleTypes = Optional.ofNullable(request.getScaleTypes());
-        return  ResponseEntity.ok(postService.readFilterScaleType(request.getLimit(), scaleTypes));
+        return ResponseEntity.ok(postService.readFilterScaleType(request.getLimit(), scaleTypes));
     }
 
+    @GetMapping("/search/posts")
+    public ResponseEntity<?> searchPostTitle(@RequestParam("search") String searchValue,
+                                             @PageableDefault Pageable pageable) {
+
+        return ResponseEntity.ok(postService.search(searchValue, pageable));
+    }
 }

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -27,8 +28,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -36,6 +36,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -239,6 +240,62 @@ class PostApiControllerTest {
                                         fieldWithPath("middles.[].images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지"),
 
                                         fieldWithPath("smalls").type(JsonFieldType.OBJECT).description("규모가 작은 곳 리스트").optional()
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("클라이밍장 검색에 성공한다.")
+    public void searchTest() throws Exception {
+        //given
+        given(postService.search(anyString(), any()))
+                .willReturn(Lists.newArrayList(
+                        createDummy(1L, "킹콩 클라이밍장", ScaleType.BIG),
+                        createDummy(2L, "킹콩 클라이밍장(고암점)", ScaleType.MIDDLE)
+                ));
+
+        //when
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("search", "킹콩");
+        queryParams.add("page", "1");
+        queryParams.add("size", "2");
+
+        RequestBuilder requestBuilder = RestDocumentationRequestBuilders.get("/search/posts")
+                .queryParams(queryParams)
+                .contentType(APPLICATION_JSON);
+        //then
+        ResultActions result = mockMvc.perform(requestBuilder)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andDo(print());
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        document("searchTest",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestParameters(
+                                        parameterWithName("search").description("검색 키워드"),
+                                        parameterWithName("page").description("페이지 번호 `1부터 시작`").optional(),
+                                        parameterWithName("size").description("표출 갯수").optional()
+                                ),
+                                responseFields(
+                                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
+                                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("[].thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
+                                        fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
+                                        fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
+                                        fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("[].level").type(JsonFieldType.NUMBER).description("난이도"),
+                                        fieldWithPath("[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
+                                        fieldWithPath("[].scale").type(JsonFieldType.NUMBER).description("크기"),
+                                        fieldWithPath("[].scaleType").type(JsonFieldType.STRING).description("클라이밍장 규모"),
+                                        fieldWithPath("[].feature").type(JsonFieldType.STRING).description("클라이밍장 특징"),
+                                        fieldWithPath("[].advantages").type(JsonFieldType.ARRAY).description("클라이밍장 장점"),
+                                        fieldWithPath("[].disAdvantages").type(JsonFieldType.ARRAY).description("클라이밍장 단점"),
+                                        fieldWithPath("[].images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지")
                                 )
                         )
                 );
