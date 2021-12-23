@@ -30,6 +30,7 @@ public class PostRequest extends CommonRequestDto {
     private String zipCode;
     private String street;
     private String detailStreet;
+    private String sido;
     private Integer scale;
     private ScaleType scaleType;
     private String feature;
@@ -76,6 +77,7 @@ public class PostRequest extends CommonRequestDto {
                         .zipCode(this.zipCode)
                         .street(this.street)
                         .detailStreet(this.detailStreet)
+                        .sido(this.sido)
                         .build())
                 .build();
     }
