@@ -15,8 +15,24 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p left join fetch p.images left join fetch p.advantages left join fetch p.disAdvantages")
     List<Post> findAllByPosts(Pageable pageable);
 
-    @Query("select p from Post p left join fetch p.images left join fetch p.advantages left join fetch p.disAdvantages where p.title like %:title%")
+    @Query("select p from Post p " +
+            "left join fetch p.images " +
+            "left join fetch p.advantages " +
+            "left join fetch p.disAdvantages " +
+            "where p.title like %:title%")
     List<Post> findLikeTitlePosts(@Param("title") String title, Pageable pageable);
+
+    @Query("select p from Post p " +
+            "left join fetch p.images " +
+            "left join fetch p.advantages " +
+            "left join fetch p.disAdvantages " +
+            "where (p.address.city = :city " +
+            "and p.scaleType = :scaleType)" +
+            "and p.address.sido like %:sido%")
+    List<Post> findCityAndLikeSidoPosts(@Param("city") String city,
+                                        @Param("sido") String sido,
+                                        @Param("scaleType") ScaleType scaleType,
+                                        Pageable pageable);
 
     @Query("select count (p) from Post p where p.title like %:title%")
     long countLikeTitlePosts(@Param("title") String title);

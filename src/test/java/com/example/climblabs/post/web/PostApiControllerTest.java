@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -36,7 +35,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -106,6 +104,7 @@ class PostApiControllerTest {
                 .title(title)
                 .level(3)
                 .city("경기")
+                .sido("성남시")
                 .zipCode("15125")
                 .street("거리 주소")
                 .detailStreet("상세주소")
@@ -153,6 +152,7 @@ class PostApiControllerTest {
                                         fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("[].sido").type(JsonFieldType.STRING).description("시/군/구"),
                                         fieldWithPath("[].level").type(JsonFieldType.NUMBER).description("난이도"),
                                         fieldWithPath("[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
                                         fieldWithPath("[].scale").type(JsonFieldType.NUMBER).description("크기"),
@@ -215,6 +215,7 @@ class PostApiControllerTest {
                                         fieldWithPath("bigs.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("bigs.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("bigs.[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("bigs.[].sido").type(JsonFieldType.STRING).description("시/군/구"),
                                         fieldWithPath("bigs.[].level").type(JsonFieldType.NUMBER).description("난이도"),
                                         fieldWithPath("bigs.[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
                                         fieldWithPath("bigs.[].scale").type(JsonFieldType.NUMBER).description("크기"),
@@ -230,6 +231,7 @@ class PostApiControllerTest {
                                         fieldWithPath("middles.[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("middles.[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("middles.[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("middles.[].sido").type(JsonFieldType.STRING).description("시/군/구"),
                                         fieldWithPath("middles.[].level").type(JsonFieldType.NUMBER).description("난이도"),
                                         fieldWithPath("middles.[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
                                         fieldWithPath("middles.[].scale").type(JsonFieldType.NUMBER).description("크기"),
@@ -249,7 +251,7 @@ class PostApiControllerTest {
     @DisplayName("클라이밍장 검색에 성공한다.")
     public void searchTest() throws Exception {
         //given
-        given(postService.search(anyString(), any()))
+        given(postService.searchTitle(anyString(), any()))
                 .willReturn(Lists.newArrayList(
                         createDummy(1L, "킹콩 클라이밍장", ScaleType.BIG),
                         createDummy(2L, "킹콩 클라이밍장(고암점)", ScaleType.MIDDLE)
@@ -288,6 +290,66 @@ class PostApiControllerTest {
                                         fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
                                         fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
                                         fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("[].sido").type(JsonFieldType.STRING).description("시/군/구"),
+                                        fieldWithPath("[].level").type(JsonFieldType.NUMBER).description("난이도"),
+                                        fieldWithPath("[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
+                                        fieldWithPath("[].scale").type(JsonFieldType.NUMBER).description("크기"),
+                                        fieldWithPath("[].scaleType").type(JsonFieldType.STRING).description("클라이밍장 규모"),
+                                        fieldWithPath("[].feature").type(JsonFieldType.STRING).description("클라이밍장 특징"),
+                                        fieldWithPath("[].advantages").type(JsonFieldType.ARRAY).description("클라이밍장 장점"),
+                                        fieldWithPath("[].disAdvantages").type(JsonFieldType.ARRAY).description("클라이밍장 단점"),
+                                        fieldWithPath("[].images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("필터검색이 정상적으로 검색된다.")
+    public void readFilterPostTest() throws Exception {
+        //given
+        given(postService.searchFilter(anyString(), any(), any()))
+                .willReturn(Lists.newArrayList(
+                        createDummy(1L, "게시물1", ScaleType.BIG),
+                        createDummy(2L, "게시물2", ScaleType.BIG)));
+
+        //when
+        MultiValueMap<String, String> querParams = new LinkedMultiValueMap<>();
+        querParams.add("sido", "성남시");
+        querParams.add("scaleType", "BIG");
+
+        RequestBuilder requestBuilder = RestDocumentationRequestBuilders.get("/search/{city}/posts", "경기")
+                .queryParams(querParams)
+                .contentType(APPLICATION_JSON);
+        //then
+        ResultActions result = mockMvc.perform(requestBuilder)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andDo(print());
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        document("readFilterPostTest",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("city").description("도/시")
+                                ),
+                                requestParameters(
+                                        parameterWithName("sido").description("시/군/구"),
+                                        parameterWithName("scaleType").description("클라이밍장 규모"),
+                                        parameterWithName("page").description("페이지 번호 `1부터 시작`").optional(),
+                                        parameterWithName("size").description("표출 갯수").optional()
+                                ),
+                                responseFields(
+                                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
+                                        fieldWithPath("[].title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("[].thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
+                                        fieldWithPath("[].city").type(JsonFieldType.STRING).description("지역"),
+                                        fieldWithPath("[].zipCode").type(JsonFieldType.STRING).description("우편번호"),
+                                        fieldWithPath("[].street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("[].sido").type(JsonFieldType.STRING).description("시/군/구"),
                                         fieldWithPath("[].level").type(JsonFieldType.NUMBER).description("난이도"),
                                         fieldWithPath("[].detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
                                         fieldWithPath("[].scale").type(JsonFieldType.NUMBER).description("크기"),

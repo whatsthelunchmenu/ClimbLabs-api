@@ -37,6 +37,7 @@ create table post (
     post_id bigint not null auto_increment,
     city varchar(255),
     detail_street varchar(255),
+    sido varchar(255),
     street varchar(255),
     zip_code varchar(255),
     created_at datetime,

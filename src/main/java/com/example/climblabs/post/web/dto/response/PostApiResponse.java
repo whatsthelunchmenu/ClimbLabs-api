@@ -29,6 +29,8 @@ public class PostApiResponse {
 
     private String detailStreet;
 
+    private String sido;
+
     private Integer scale;
 
     private ScaleType scaleType;
@@ -51,6 +53,7 @@ public class PostApiResponse {
                            String zipCode,
                            String street,
                            String detailStreet,
+                           String sido,
                            Integer scale,
                            ScaleType scaleType,
                            String feature,
@@ -65,6 +68,7 @@ public class PostApiResponse {
         this.zipCode = zipCode;
         this.street = street;
         this.detailStreet = detailStreet;
+        this.sido = sido;
         this.scale = scale;
         this.scaleType = scaleType;
         this.feature = feature;
@@ -90,6 +94,7 @@ public class PostApiResponse {
                 .zipCode(address.getZipCode())
                 .street(address.getStreet())
                 .detailStreet(address.getDetailStreet())
+                .sido(address.getSido())
                 .scale(it.getScale())
                 .scaleType(it.getScaleType())
                 .feature(it.getFeature())
