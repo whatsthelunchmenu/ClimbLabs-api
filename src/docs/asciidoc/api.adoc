@@ -47,3 +47,18 @@ include::{snippets}/searchTest/request-parameters.adoc[]
 === 응답
 include::{snippets}/searchTest/http-response.adoc[]
 include::{snippets}/searchTest/response-fields.adoc[]
+
+== 암장 필터 검색
+
+=== 요청
+include::{snippets}/readFilterPostTest/http-request.adoc[]
+
+=== 요청 Path파라미터
+include::{snippets}/readFilterPostTest/path-parameters.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/readFilterPostTest/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/readFilterPostTest/http-response.adoc[]
+include::{snippets}/readFilterPostTest/response-fields.adoc[]
