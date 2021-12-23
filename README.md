@@ -1,4 +1,5 @@
 # ClimbLabs-api
+[![CI](https://github.com/whatsthelunchmenu/ClimbLabs-api/actions/workflows/pull-request.yml/badge.svg)](https://github.com/whatsthelunchmenu/ClimbLabs-api/actions/workflows/pull-request.yml)
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/39672033/144972037-d02b43a8-30eb-487c-863d-e6e8119e09c3.jpg"/>
