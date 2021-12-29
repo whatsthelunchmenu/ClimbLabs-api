@@ -1,6 +1,7 @@
 package com.example.climblabs.global.utils.image;
 
-import com.example.climblabs.global.exception.OtherPlatformHttpException;
+import com.example.climblabs.global.exception.ClimbLabsException;
+import com.example.climblabs.global.exception.ExceptionCode;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +72,7 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
                 return file;
             }
         } catch (Exception ex) {
-            throw new OtherPlatformHttpException();
+            throw new ClimbLabsException(ExceptionCode.FAIL_SAVE_IMAGE);
         }
     }
 
