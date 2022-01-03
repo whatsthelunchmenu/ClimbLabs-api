@@ -181,49 +181,9 @@ public class PostService {
 
     public List<PostApiResponse> searchFilter(String city, PostFilterRequest request, Pageable pageable) {
 
-        // 모든 필터가 선택되지 않은 경우
-        if (request.getSidos() == null && request.getScaleType().equals(ScaleType.ALL)) {
-            return getPostInCityFilter(city, pageable);
-        }// 모든 필터가 선택된 경우
-        else if (request.getSidos() != null && !request.getScaleType().equals(ScaleType.ALL)) {
-            return getPostInCityAndSidoAndScaleTypeFilter(city, request, pageable);
-        }// 하나만 선택된 경우
-        else {
-            if (request.getSidos() == null) {
-                return getPostInCityAndScaleTypeFilter(city, request, pageable);
-
-            } else {
-                return getPostInCityAndSidoFilter(city, request, pageable);
-            }
-        }
-    }
-
-    private List<PostApiResponse> getPostInCityAndSidoAndScaleTypeFilter(String city, PostFilterRequest request, Pageable pageable) {
-        return postRepository.findCityAndSidoAndScaleTypePosts(city, request.getSidos(), request.getScaleType(), pageable)
+        return postRepository.findCityAndLikeSidoPosts(city, request.getSido(), request.getScaleType(), pageable)
                 .stream()
                 .map(it -> PostApiResponse.of(it))
                 .collect(Collectors.toList());
     }
-
-    private List<PostApiResponse> getPostInCityFilter(String city, Pageable pageable) {
-        return postRepository.findCityPosts(city, pageable)
-                .stream()
-                .map(it -> PostApiResponse.of(it))
-                .collect(Collectors.toList());
-    }
-
-    private List<PostApiResponse> getPostInCityAndSidoFilter(String city, PostFilterRequest request, Pageable pageable) {
-        return postRepository.findCityAndSidoPosts(city, request.getSidos(), pageable)
-                .stream()
-                .map(it -> PostApiResponse.of(it))
-                .collect(Collectors.toList());
-    }
-
-    private List<PostApiResponse> getPostInCityAndScaleTypeFilter(String city, PostFilterRequest request, Pageable pageable) {
-        return postRepository.findCityAndScaleTypePosts(city, request.getScaleType(), pageable)
-                .stream()
-                .map(it -> PostApiResponse.of(it))
-                .collect(Collectors.toList());
-    }
-
 }
