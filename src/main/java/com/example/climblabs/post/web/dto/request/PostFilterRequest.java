@@ -4,11 +4,9 @@ import com.example.climblabs.post.domain.ScaleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @Getter
 public class PostFilterRequest {
-    private List<String> sidos;
+    private String sido;
     private ScaleType scaleType;
 }
