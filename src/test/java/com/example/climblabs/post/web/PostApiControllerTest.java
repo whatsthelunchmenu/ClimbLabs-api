@@ -315,7 +315,7 @@ class PostApiControllerTest {
 
         //when
         MultiValueMap<String, String> querParams = new LinkedMultiValueMap<>();
-        querParams.add("sido", "성남시");
+        querParams.add("sidos", "성남시");
         querParams.add("scaleType", "BIG");
 
         RequestBuilder requestBuilder = RestDocumentationRequestBuilders.get("/search/{city}/posts", "경기")
@@ -337,8 +337,8 @@ class PostApiControllerTest {
                                         parameterWithName("city").description("도/시")
                                 ),
                                 requestParameters(
-                                        parameterWithName("sido").description("시/군/구"),
-                                        parameterWithName("scaleType").description("클라이밍장 규모"),
+                                        parameterWithName("sidos").description("시/군/구").optional(),
+                                        parameterWithName("scaleType").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
                                         parameterWithName("page").description("페이지 번호 `1부터 시작`").optional(),
                                         parameterWithName("size").description("표출 갯수").optional()
                                 ),
