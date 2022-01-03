@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -182,14 +183,14 @@ public class PostService {
     public List<PostApiResponse> searchFilter(String city, PostFilterRequest request, Pageable pageable) {
 
         // 모든 필터가 선택되지 않은 경우
-        if (request.getSidos() == null && request.getScaleType().equals(ScaleType.ALL)) {
+        if (ObjectUtils.isEmpty(request.getSidos()) && request.getScaleType().equals(ScaleType.ALL)) {
             return getPostInCityFilter(city, pageable);
         }// 모든 필터가 선택된 경우
-        else if (request.getSidos() != null && !request.getScaleType().equals(ScaleType.ALL)) {
+        else if (!ObjectUtils.isEmpty(request.getSidos()) && !request.getScaleType().equals(ScaleType.ALL)) {
             return getPostInCityAndSidoAndScaleTypeFilter(city, request, pageable);
         }// 하나만 선택된 경우
         else {
-            if (request.getSidos() == null) {
+            if (ObjectUtils.isEmpty(request.getSidos())) {
                 return getPostInCityAndScaleTypeFilter(city, request, pageable);
 
             } else {
