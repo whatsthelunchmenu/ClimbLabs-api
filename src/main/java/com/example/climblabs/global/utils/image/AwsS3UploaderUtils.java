@@ -11,11 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,6 +38,10 @@ public class AwsS3UploaderUtils implements ImageStorageUtils {
 
     @Override
     public List<ImageFileDto> saveToStorages(List<MultipartFile> images) {
+        if (CollectionUtils.isEmpty(images)) {
+            return Collections.emptyList();
+        }
+
         List<File> files = convert(images);
         return uploads(files);
     }

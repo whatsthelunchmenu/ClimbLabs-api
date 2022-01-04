@@ -1,9 +1,11 @@
 package com.example.climblabs.post.domain;
 
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.member.domain.Member;
 import com.example.climblabs.post.domain.content.Image;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
+import com.example.climblabs.post.service.dto.PostDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,13 +48,13 @@ public class Post {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Advantage> advantages = new HashSet<>();
 
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<DisAdvantage> disAdvantages = new HashSet<>();
 
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Image> images = new HashSet<>();
 
     @ManyToOne
@@ -98,7 +100,7 @@ public class Post {
                 .collect(Collectors.toList());
     }
 
-    public void setThumbnail(ThumbNail thumbnail){
+    public void setThumbnail(ThumbNail thumbnail) {
         this.thumbnail = thumbnail;
     }
 
@@ -109,5 +111,48 @@ public class Post {
         }
         this.member = member;
         member.getPost().add(this);
+    }
+
+    public void setAdvantages(List<String> items) {
+        advantages.clear();
+        items.stream().forEach(it -> advantages.add(Advantage.createAdvantage(this, it)));
+    }
+
+    public void setDisAdvantages(List<String> items) {
+        disAdvantages.clear();
+        items.stream().forEach(it -> disAdvantages.add(DisAdvantage.createDisAdvantage(this, it)));
+    }
+
+    public void setImages(List<ImageFileDto> imageFileDtos) {
+        images.clear();
+
+        Set<Image> updateImages = imageFileDtos.stream()
+                .map(i -> Image.createImage(i, this))
+                .collect(Collectors.toSet());
+        updateImages.stream()
+                .forEach(it -> images.add(it));
+    }
+
+    /*
+        비즈니스 로직
+     */
+    public void update(PostDto postDto) {
+        title = postDto.getTitle();
+        level = postDto.getLevel();
+        address = Address.builder()
+                .city(postDto.getCity())
+                .zipCode(postDto.getZipCode())
+                .detailStreet(postDto.getDetailStreet())
+                .street(postDto.getStreet())
+                .sido(postDto.getSido())
+                .build();
+        scale = postDto.getScale();
+        scaleType = postDto.getScaleType();
+        feature = postDto.getFeature();
+        thumbnail = ThumbNail.createThumbNail(postDto.getThumbNailDto());
+        setAdvantages(postDto.getAdvantages());
+        setDisAdvantages(postDto.getDisAdvantages());
+        setImages(postDto.getImageFileDtos());
+        updatedAt = LocalDateTime.now();
     }
 }

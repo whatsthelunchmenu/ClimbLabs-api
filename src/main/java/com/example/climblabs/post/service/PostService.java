@@ -1,14 +1,18 @@
 package com.example.climblabs.post.service;
 
 import com.example.climblabs.admin.web.dto.CommonRequestDto;
+import com.example.climblabs.global.exception.ClimbLabsException;
+import com.example.climblabs.global.exception.ExceptionCode;
 import com.example.climblabs.global.utils.common.SearchType;
 import com.example.climblabs.global.utils.image.ImageStorageUtils;
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.global.utils.pagination.PaginationInfo;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.domain.content.Advantage;
 import com.example.climblabs.post.domain.content.DisAdvantage;
 import com.example.climblabs.post.domain.repository.PostRepository;
+import com.example.climblabs.post.service.dto.PostDto;
 import com.example.climblabs.post.web.dto.request.PostFilterRequest;
 import com.example.climblabs.post.web.dto.request.PostRequest;
 import com.example.climblabs.post.web.dto.response.PostApiResponse;
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class PostService {
 
@@ -60,6 +65,19 @@ public class PostService {
 
         newPost.setThumbnail(request.convertImage(imageStorageUtils.saveToStorage(request.getThumbNailImage())));
         return newPost;
+    }
+
+    @Transactional
+    public PostApiResponse updatePost(Long postId, PostRequest request) {
+        Post getPost = postRepository.findById(postId)
+                .orElseThrow(() -> new ClimbLabsException(ExceptionCode.NOT_FOUND_POST));
+
+        List<ImageFileDto> imageDtos = imageStorageUtils.saveToStorages(request.getImages());
+        ImageFileDto thumbNailDto = imageStorageUtils.saveToStorage(request.getThumbNailImage());
+
+        getPost.update(PostDto.of(request, imageDtos, thumbNailDto));
+
+        return PostApiResponse.of(getPost);
     }
 
     public List<PostResponse> readPostApi(Pageable pageable) {

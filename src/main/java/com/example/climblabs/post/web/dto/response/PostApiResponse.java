@@ -1,5 +1,6 @@
 package com.example.climblabs.post.web.dto.response;
 
+import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.post.domain.Address;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
@@ -84,7 +85,8 @@ public class PostApiResponse {
         List<String> disAdvantiageList = it.getDisAdvantageResponseFrom(it.getDisAdvantages());
         List<String> imageList = it.getImageResponseFrom(it.getImages());
         Address address = Optional.ofNullable(it.getAddress()).orElse(new Address());
-        ThumbNail thumbNail = Optional.ofNullable(it.getThumbnail()).orElse(new ThumbNail());
+        ImageFileDto imageFileDto = ImageFileDto.builder().build();
+        ThumbNail thumbNail = Optional.ofNullable(it.getThumbnail()).orElse(ThumbNail.createThumbNail(imageFileDto));
 
         return PostApiResponse.builder()
                 .id(it.getId())

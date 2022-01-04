@@ -5,6 +5,7 @@ import com.example.climblabs.global.exception.ExceptionCode;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Profile(value = "default")
@@ -22,13 +24,18 @@ public class LocalSaveFileUtils implements ImageStorageUtils {
 
     @Override
     public List<ImageFileDto> saveToStorages(List<MultipartFile> images) {
-
+        if (CollectionUtils.isEmpty(images)) {
+            return Collections.emptyList();
+        }
         List<File> files = convertMultipartFileToFile(images);
         return saveImageFile(files);
     }
 
     @Override
     public ImageFileDto saveToStorage(MultipartFile image) {
+        if (image == null){
+            return new ImageFileDto("", "");
+        }
         File file = toFile(image);
         return saveFile().apply(file);
     }

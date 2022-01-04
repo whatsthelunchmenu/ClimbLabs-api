@@ -12,6 +12,7 @@ import com.example.climblabs.post.domain.content.DisAdvantage;
 import lombok.*;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class PostRequest extends CommonRequestDto {
     }
 
     public ThumbNail convertImage(ImageFileDto imageFileDto){
-        return new ThumbNail(imageFileDto);
+        return ThumbNail.createThumbNail(imageFileDto);
     }
 
     public Post getPost() {

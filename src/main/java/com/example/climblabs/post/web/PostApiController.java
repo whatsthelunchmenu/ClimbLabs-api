@@ -5,6 +5,7 @@ import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.service.PostService;
 import com.example.climblabs.post.web.dto.request.PostFilterRequest;
 import com.example.climblabs.post.web.dto.request.PostScaleTypeRequest;
+import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostIdResponse;
 import com.example.climblabs.post.web.dto.request.PostRequest;
 import com.example.climblabs.post.web.dto.response.PostResponse;
@@ -34,6 +35,12 @@ public class PostApiController {
                         .postId(postId)
                         .build()
         );
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public ResponseEntity<?> update(@PathVariable("postId") Long postId, PostRequest request) {
+        PostApiResponse postResponse = postService.updatePost(postId, request);
+        return ResponseEntity.ok(postResponse);
     }
 
     @GetMapping("/posts")
