@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -21,19 +23,21 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -67,11 +71,15 @@ class PostApiControllerTest {
                 .build();
 
         files = new LinkedMultiValueMap<>();
-        files.add("title", "climbingTitle");
         files.add("level", "1");
-
-        files.add("location", "location");
-        files.add("size", "size");
+        files.add("title", "climbingTitle");
+        files.add("city", "경기");
+        files.add("scale", "84");
+        files.add("sido", "성남시");
+        files.add("scaleType", "BIG");
+        files.add("street", "거리 주소");
+        files.add("detailStreet", "상세주소");
+        files.add("zipCode", "15125");
         files.add("feature", "feature");
     }
 
@@ -139,7 +147,7 @@ class PostApiControllerTest {
         result.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
-                        document("readRandomPostLimit",
+                        document("{class-name}/{method-name}",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
@@ -200,7 +208,7 @@ class PostApiControllerTest {
         result.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
-                        document("randomPostScaleTypeLimitTest",
+                        document("{class-name}/{method-name}",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestParameters(
@@ -275,7 +283,7 @@ class PostApiControllerTest {
         result.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
-                        document("searchTest",
+                        document("{class-name}/{method-name}",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 requestParameters(
@@ -330,7 +338,7 @@ class PostApiControllerTest {
         result.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
-                        document("readFilterPostTest",
+                        document("{class-name}/{method-name}",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
@@ -358,6 +366,81 @@ class PostApiControllerTest {
                                         fieldWithPath("[].advantages").type(JsonFieldType.ARRAY).description("클라이밍장 장점"),
                                         fieldWithPath("[].disAdvantages").type(JsonFieldType.ARRAY).description("클라이밍장 단점"),
                                         fieldWithPath("[].images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("게시물 수정에 성공한다.")
+    public void updatePostTest() throws Exception {
+        //given
+        given(postService.updatePost(anyLong(), any()))
+                .willReturn(createDummy(1L, "업데이트 게시물", ScaleType.BIG));
+
+        //when
+        MockMultipartHttpServletRequestBuilder fileUpload = (MockMultipartHttpServletRequestBuilder) RestDocumentationRequestBuilders.fileUpload(
+                "/posts/{postId}", 1).with(request -> {
+            request.setMethod(HttpMethod.PATCH.name());
+            return request;
+        });
+
+        fileUpload.file("images", "example".getBytes())
+                .file("thumbNailImage", "example".getBytes())
+                .contentType(APPLICATION_JSON)
+                .param("advantages", new String[]{"advantage1", "advantage2"})
+                .param("disAdvantages", new String[]{"disAdvantage1", "disAdvantage2"})
+                .params(files);
+
+        //then
+        ResultActions result = mockMvc.perform(fileUpload)
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andDo(print());
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        document("{class-name}/{method-name}",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("postId").description("수정할 게시물 아이디")
+                                ),
+                                requestParts(
+                                        partWithName("images").description("이미지1").optional(),
+                                        partWithName("thumbNailImage").description("썸네일 이미지").optional()
+                                ),
+                                requestParameters(
+                                        parameterWithName("title").description("클라이밍장 이름"),
+                                        parameterWithName("city").description("지역"),
+                                        parameterWithName("zipCode").description("우편번호"),
+                                        parameterWithName("street").description("위치"),
+                                        parameterWithName("sido").description("시/군/구"),
+                                        parameterWithName("level").description("난이도"),
+                                        parameterWithName("detailStreet").description("상세 위치").optional(),
+                                        parameterWithName("scale").description("크기"),
+                                        parameterWithName("scaleType").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
+                                        parameterWithName("feature").description("클라이밍장 특징").optional(),
+                                        parameterWithName("advantages").description("클라이밍장 장점").optional(),
+                                        parameterWithName("disAdvantages").description("클라이밍장 단점").optional()
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("클라이밍장 이름"),
+                                        fieldWithPath("thumbNailUrl").type(JsonFieldType.STRING).description("썸네일 이미지"),
+                                        fieldWithPath("city").type(JsonFieldType.STRING).description("지역"),
+                                        fieldWithPath("zipCode").type(JsonFieldType.STRING).description("우편번호"),
+                                        fieldWithPath("street").type(JsonFieldType.STRING).description("위치"),
+                                        fieldWithPath("sido").type(JsonFieldType.STRING).description("시/군/구"),
+                                        fieldWithPath("level").type(JsonFieldType.NUMBER).description("난이도"),
+                                        fieldWithPath("detailStreet").type(JsonFieldType.STRING).description("상세 위치치"),
+                                        fieldWithPath("scale").type(JsonFieldType.NUMBER).description("크기"),
+                                        fieldWithPath("scaleType").type(JsonFieldType.STRING).description("클라이밍장 규모"),
+                                        fieldWithPath("feature").type(JsonFieldType.STRING).description("클라이밍장 특징"),
+                                        fieldWithPath("advantages").type(JsonFieldType.ARRAY).description("클라이밍장 장점"),
+                                        fieldWithPath("disAdvantages").type(JsonFieldType.ARRAY).description("클라이밍장 단점"),
+                                        fieldWithPath("images").type(JsonFieldType.ARRAY).description("클라이밍장 이미지")
                                 )
                         )
                 );
