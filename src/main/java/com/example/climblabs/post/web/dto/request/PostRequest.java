@@ -40,31 +40,6 @@ public class PostRequest extends CommonRequestDto {
     private List<String> advantages;
     private List<String> disAdvantages;
 
-    public Set<Advantage> convertAdvantage(List<String> items) {
-        if (CollectionUtils.isEmpty(items)) {
-            return Collections.emptySet();
-        }
-        return items.stream().map(Advantage::new).collect(Collectors.toSet());
-    }
-
-    public Set<DisAdvantage> convertDisAdvantage(List<String> items) {
-        if (CollectionUtils.isEmpty(items)) {
-            return Collections.emptySet();
-        }
-        return items.stream().map(DisAdvantage::new).collect(Collectors.toSet());
-    }
-
-    public List<Image> convertImages(List<ImageFileDto> items) {
-        if (CollectionUtils.isEmpty(items)) {
-            return Collections.emptyList();
-        }
-        return items.stream().map(Image::new).collect(Collectors.toList());
-    }
-
-    public ThumbNail convertImage(ImageFileDto imageFileDto){
-        return ThumbNail.createThumbNail(imageFileDto);
-    }
-
     public Post getPost() {
 
         return Post.builder()

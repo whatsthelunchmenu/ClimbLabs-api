@@ -65,9 +65,9 @@ public class PostResponse extends CommonRequestDto {
 
     public static PostResponse of(Post it) {
 
-        List<String> advantageList = it.getAdvantageResponseFrom(it.getAdvantages());
-        List<String> disAdvantiageList = it.getDisAdvantageResponseFrom(it.getDisAdvantages());
-        List<String> imageList = it.getImageResponseFrom(it.getImages());
+        List<String> advantageList = it.getAdvantageItems();
+        List<String> disAdvantiageList = it.getDisAdvantageItems();
+        List<String> imageList = it.getImagePaths();
 
         return PostResponse.builder()
                 .id(it.getId())

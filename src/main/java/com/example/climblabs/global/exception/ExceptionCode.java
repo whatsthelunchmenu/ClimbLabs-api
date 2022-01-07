@@ -12,6 +12,8 @@ public enum ExceptionCode {
      */
     //파일 저장 실패 시
     FAIL_SAVE_IMAGE(500, "이미지 파일을 저장 실패했습니다."),
+    //파일 삭제 실패 시
+    FAIL_DELETE_IMAGE(500, "파일 삭제 실패했습니다."),
     //요청 용량 초과 시
     SizeLimitExceededException(500, "요청 용량 초과되었습니다."),
     //파일 용량 초과 시

@@ -81,9 +81,9 @@ public class PostApiResponse {
 
     public static PostApiResponse of(Post it) {
 
-        List<String> advantageList = it.getAdvantageResponseFrom(it.getAdvantages());
-        List<String> disAdvantiageList = it.getDisAdvantageResponseFrom(it.getDisAdvantages());
-        List<String> imageList = it.getImageResponseFrom(it.getImages());
+        List<String> advantageList = it.getAdvantageItems();
+        List<String> disAdvantiageList = it.getDisAdvantageItems();
+        List<String> imageList = it.getImagePaths();
         Address address = Optional.ofNullable(it.getAddress()).orElse(new Address());
         ImageFileDto imageFileDto = ImageFileDto.builder().build();
         ThumbNail thumbNail = Optional.ofNullable(it.getThumbnail()).orElse(ThumbNail.createThumbNail(imageFileDto));

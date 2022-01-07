@@ -50,20 +50,12 @@ public class PostService {
     }
 
     private Post createPost(PostRequest request) {
-
         Post newPost = request.getPost();
-        request.getAdvantages()
-                .stream()
-                .forEach(item -> new Advantage(newPost, item));
 
-        request.getDisAdvantages()
-                .stream()
-                .forEach(item -> new DisAdvantage(newPost, item));
+        List<ImageFileDto> imageDtos = imageStorageUtils.saveToStorages(request.getImages());
+        ImageFileDto thumbNailDto = imageStorageUtils.saveToStorage(request.getThumbNailImage());
 
-        request.convertImages(imageStorageUtils.saveToStorages(request.getImages()))
-                .stream().forEach(item -> item.setPost(newPost));
-
-        newPost.setThumbnail(request.convertImage(imageStorageUtils.saveToStorage(request.getThumbNailImage())));
+        newPost.update(PostDto.of(request, imageDtos, thumbNailDto));
         return newPost;
     }
 
@@ -71,6 +63,10 @@ public class PostService {
     public PostApiResponse updatePost(Long postId, PostRequest request) {
         Post getPost = postRepository.findById(postId)
                 .orElseThrow(() -> new ClimbLabsException(ExceptionCode.NOT_FOUND_POST));
+
+        // 기존에 존재하는 이미지 삭제
+        imageStorageUtils.deleteToImages(getPost.getImageNames());
+        imageStorageUtils.deleteToImage(getPost.getThumbnail().getThumbNailName());
 
         List<ImageFileDto> imageDtos = imageStorageUtils.saveToStorages(request.getImages());
         ImageFileDto thumbNailDto = imageStorageUtils.saveToStorage(request.getThumbNailImage());

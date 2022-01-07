@@ -82,26 +82,28 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public List<String> getAdvantageResponseFrom(Set<Advantage> advantages) {
+    public List<String> getAdvantageItems() {
         return advantages.stream()
                 .map(Advantage::getItem)
                 .collect(Collectors.toList());
     }
 
-    public List<String> getDisAdvantageResponseFrom(Set<DisAdvantage> disAdvantages) {
+    public List<String> getDisAdvantageItems() {
         return disAdvantages.stream()
                 .map(DisAdvantage::getItem)
                 .collect(Collectors.toList());
     }
 
-    public List<String> getImageResponseFrom(Set<Image> images) {
+    public List<String> getImagePaths() {
         return images.stream()
                 .map(Image::getUrl)
                 .collect(Collectors.toList());
     }
 
-    public void setThumbnail(ThumbNail thumbnail) {
-        this.thumbnail = thumbnail;
+    public List<String> getImageNames(){
+        return images.stream()
+                .map(Image::getName)
+                .collect(Collectors.toList());
     }
 
     public void setMember(Member member) {
