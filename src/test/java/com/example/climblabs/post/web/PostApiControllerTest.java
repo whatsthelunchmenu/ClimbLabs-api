@@ -406,8 +406,8 @@ class PostApiControllerTest {
                         parameterWithName("postId").description("수정할 게시물 아이디")
                     ),
                     requestParts(
-                        partWithName("images").description("이미지1").optional(),
-                        partWithName("thumbNailImage").description("썸네일 이미지").optional()
+                        partWithName("images").description("이미지1"),
+                        partWithName("thumbNailImage").description("썸네일 이미지")
                     ),
                     requestParameters(
                         parameterWithName("title").description("클라이밍장 이름"),
@@ -416,12 +416,12 @@ class PostApiControllerTest {
                         parameterWithName("street").description("위치"),
                         parameterWithName("sido").description("시/군/구"),
                         parameterWithName("level").description("난이도"),
-                        parameterWithName("detailStreet").description("상세 위치").optional(),
+                        parameterWithName("detailStreet").description("상세 위치"),
                         parameterWithName("scale").description("크기"),
                         parameterWithName("scaleType").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
-                        parameterWithName("feature").description("클라이밍장 특징").optional(),
-                        parameterWithName("advantages").description("클라이밍장 장점").optional(),
-                        parameterWithName("disAdvantages").description("클라이밍장 단점").optional()
+                        parameterWithName("feature").description("클라이밍장 특징"),
+                        parameterWithName("advantages").description("클라이밍장 장점"),
+                        parameterWithName("disAdvantages").description("클라이밍장 단점")
                     ),
                     responseFields(
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("게시물 아이디"),
