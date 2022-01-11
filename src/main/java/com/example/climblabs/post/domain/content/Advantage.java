@@ -1,13 +1,14 @@
 package com.example.climblabs.post.domain.content;
 
 import com.example.climblabs.post.domain.Post;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Advantage {
 
@@ -27,10 +28,17 @@ public class Advantage {
         this.item = item;
     }
 
-    public Advantage(Post post, String item){
+    public Advantage(Post post, String item) {
         setPost(post);
 
         this.item = item;
+    }
+
+    public static Advantage createAdvantage(Post post, String item) {
+        Advantage advantage = new Advantage();
+        advantage.post = post;
+        advantage.item = item;
+        return advantage;
     }
 
     public String getItem() {

@@ -33,11 +33,23 @@ public class Image {
         return url;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public void setPost(Post post){
         if (this.post != null){
             this.post.getImages().remove(this);
         }
         this.post = post;
         post.getImages().add(this);
+    }
+
+    public static Image createImage(ImageFileDto imageFileDto, Post post){
+        Image image = new Image();
+        image.name = imageFileDto.getName();
+        image.url = imageFileDto.getUrl();
+        image.post = post;
+        return image;
     }
 }

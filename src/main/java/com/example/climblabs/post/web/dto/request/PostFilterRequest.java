@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 public class PostFilterRequest {
     private List<String> sidos;
-    private ScaleType scaleType;
+    private List<ScaleType> scaleTypes;
 }

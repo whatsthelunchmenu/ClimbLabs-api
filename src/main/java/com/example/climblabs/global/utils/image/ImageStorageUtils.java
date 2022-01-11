@@ -10,4 +10,8 @@ public interface ImageStorageUtils {
     List<ImageFileDto> saveToStorages(List<MultipartFile> images);
 
     ImageFileDto saveToStorage(MultipartFile image);
+
+    void deleteToImages(List<String> paths);
+
+    void deleteToImage(String path);
 }

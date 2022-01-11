@@ -15,50 +15,66 @@
 == 여긴어때
 
 === 요청
-include::{snippets}/readRandomPostLimit/http-request.adoc[]
+include::{snippets}/read-random-post-limit-test/http-request.adoc[]
 
 === 요청 Path파라미터
-include::{snippets}/readRandomPostLimit/path-parameters.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-limit-test/path-parameters.adoc[]
 
 === 응답
-include::{snippets}/readRandomPostLimit/http-response.adoc[]
-include::{snippets}/readRandomPostLimit/response-fields.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-limit-test/http-response.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-limit-test/response-fields.adoc[]
 
 == 여긴 이만해
 
 === 요청
-include::{snippets}/randomPostScaleTypeLimitTest/http-request.adoc[]
+include::{snippets}/read-random-post-scale-type-limit-test/http-request.adoc[]
 
 === 요청 파라미터
-include::{snippets}/randomPostScaleTypeLimitTest/request-parameters.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-scale-type-limit-test/request-parameters.adoc[]
 
 === 응답
-include::{snippets}/randomPostScaleTypeLimitTest/http-response.adoc[]
-include::{snippets}/randomPostScaleTypeLimitTest/response-fields.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-scale-type-limit-test/http-response.adoc[]
+include::{snippets}/post-api-controller-test/read-random-post-scale-type-limit-test/response-fields.adoc[]
 
 == 암장 검색
 
 === 요청
-include::{snippets}/searchTest/http-request.adoc[]
+include::{snippets}/search-test/http-request.adoc[]
 
 === 요청 파라미터
-include::{snippets}/searchTest/request-parameters.adoc[]
+include::{snippets}/post-api-controller-test/search-test/request-parameters.adoc[]
 
 === 응답
-include::{snippets}/searchTest/http-response.adoc[]
-include::{snippets}/searchTest/response-fields.adoc[]
+include::{snippets}/search-test/http-response.adoc[]
+include::{snippets}/post-api-controller-test/search-test/response-fields.adoc[]
 
 == 암장 필터 검색
 
 === 요청
-include::{snippets}/readFilterPostTest/http-request.adoc[]
+include::{snippets}/read-filter-post-test/http-request.adoc[]
 
 === 요청 Path파라미터
-include::{snippets}/readFilterPostTest/path-parameters.adoc[]
+include::{snippets}/post-api-controller-test/read-filter-post-test/path-parameters.adoc[]
 
 === 요청 파라미터
-include::{snippets}/readFilterPostTest/request-parameters.adoc[]
+include::{snippets}/post-api-controller-test/read-filter-post-test/request-parameters.adoc[]
 
 === 응답
-include::{snippets}/readFilterPostTest/http-response.adoc[]
-include::{snippets}/readFilterPostTest/response-fields.adoc[]
+include::{snippets}/read-filter-post-test/http-response.adoc[]
+include::{snippets}/post-api-controller-test/read-filter-post-test/response-fields.adoc[]
+
+== 암장 수정
+
+=== 요청
+include::{snippets}/post-api-controller-test/update-post-test/http-request.adoc[]
+
+=== 요청 Path 파라미터
+include::{snippets}/post-api-controller-test/update-post-test/path-parameters.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/post-api-controller-test/update-post-test/request-parts.adoc[]
+include::{snippets}/post-api-controller-test/update-post-test/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/post-api-controller-test/update-post-test/response-body.adoc[]
+include::{snippets}/post-api-controller-test/update-post-test/response-fields.adoc[]
