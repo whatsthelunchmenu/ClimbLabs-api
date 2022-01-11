@@ -26,11 +26,11 @@ public interface PostRepository extends JpaRepository<Post, Long>{
             "left join fetch p.advantages " +
             "left join fetch p.disAdvantages " +
             "where (p.address.city = :city " +
-            "and p.scaleType = :scaleType)" +
+            "and p.scaleType in (:scaleTypes))" +
             "and p.address.sido in (:sidos)")
     List<Post> findCityAndSidoAndScaleTypePosts(@Param("city") String city,
                                                 @Param("sidos") List<String> sidos,
-                                                @Param("scaleType") ScaleType scaleType,
+                                                @Param("scaleTypes") List<ScaleType> scaleTypes,
                                                 Pageable pageable);
 
     @Query("select p from Post p " +
@@ -55,9 +55,9 @@ public interface PostRepository extends JpaRepository<Post, Long>{
             "left join fetch p.advantages " +
             "left join fetch p.disAdvantages " +
             "where p.address.city = :city " +
-            "and p.scaleType = :scaleType")
+            "and p.scaleType in (:scaleTypes)")
     List<Post> findCityAndScaleTypePosts(@Param("city") String city,
-                                                @Param("scaleType") ScaleType scaleType,
+                                                @Param("scaleTypes") List<ScaleType> scaleTypes,
                                                 Pageable pageable);
 
     @Query("select count (p) from Post p where p.title like %:title%")

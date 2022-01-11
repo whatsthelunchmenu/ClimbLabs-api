@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -30,14 +29,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.nio.charset.StandardCharsets;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -324,7 +322,7 @@ class PostApiControllerTest {
         //when
         MultiValueMap<String, String> querParams = new LinkedMultiValueMap<>();
         querParams.add("sidos", "성남시");
-        querParams.add("scaleType", "BIG");
+        querParams.add("scaleTypes", "BIG");
 
         RequestBuilder requestBuilder = RestDocumentationRequestBuilders.get("/search/{city}/posts", "경기")
             .queryParams(querParams)
@@ -346,7 +344,7 @@ class PostApiControllerTest {
                     ),
                     requestParameters(
                         parameterWithName("sidos").description("시/군/구").optional(),
-                        parameterWithName("scaleType").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
+                        parameterWithName("scaleTypes").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
                         parameterWithName("page").description("페이지 번호 `1부터 시작`").optional(),
                         parameterWithName("size").description("표출 갯수").optional()
                     ),
