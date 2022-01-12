@@ -1,5 +1,6 @@
 package com.example.climblabs.post.domain;
 
+import com.example.climblabs.global.entity.BaseEntity;
 import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.member.domain.Member;
 import com.example.climblabs.post.domain.content.Image;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +44,6 @@ public class Post {
     private ScaleType scaleType;
 
     private String feature;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Advantage> advantages = new HashSet<>();
@@ -78,8 +75,6 @@ public class Post {
         this.scaleType = scaleType;
         this.feature = feature;
         this.thumbnail = thumbnail;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
     public List<String> getAdvantageItems() {
@@ -155,6 +150,5 @@ public class Post {
         setAdvantages(postDto.getAdvantages());
         setDisAdvantages(postDto.getDisAdvantages());
         setImages(postDto.getImageFileDtos());
-        updatedAt = LocalDateTime.now();
     }
 }
