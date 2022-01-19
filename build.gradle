@@ -111,8 +111,24 @@ jar {
 jacocoTestReport {
     reports {
         html.enabled true
-        csv.enabled true
+        csv.enabled false
         xml.enabled true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/*Application*',
+                            '**/*Config*',
+                            '**/*Exception*',
+                            '**/*Dto*',
+                            '**/*dto*',
+                            '**/*Request*',
+                            '**/*Response*'
+                    ])
+                })
+        )
     }
     finalizedBy 'jacocoTestCoverageVerification'
 }
@@ -131,22 +147,14 @@ jacocoTestCoverageVerification {
             }
 
             excludes = [
-                    "**.*Dto",
-                    "**.*Request",
-                    "**.*Response"
+                    '**/*Application*',
+                    '**/*Config*',
+                    '**/*Dto*',
+                    '**/*Exception*',
+                    '**/*dto*',
+                    '**/*Request*',
+                    '**/*Response*'
             ]
         }
     }
-}
-
-task testCoverage(type: Test) {
-    group 'verification'
-    description 'Runs the unit tests with coverage'
-
-    dependsOn(':test',
-            ':jacocoTestReport',
-            ':jacocoTestCoverageVerification')
-
-    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
-    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
 }
