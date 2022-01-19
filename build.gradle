@@ -63,7 +63,7 @@ ext {
 test {
     useJUnitPlatform()
     outputs.dir snippetsDir // 선언한 디렉토리에 생성
-//    finalizedBy 'jacocoTestReport'
+    finalizedBy 'jacocoTestReport'
 }
 
 // ext에서 정의한 경로에 스니펫을 넣어준뒤 테스트를 진행한다.
@@ -114,7 +114,7 @@ jacocoTestReport {
         csv.enabled true
         xml.enabled false
     }
-//    finalizedBy 'jacocoTestCoverageVerification'
+    finalizedBy 'jacocoTestCoverageVerification'
 }
 
 jacocoTestCoverageVerification {
