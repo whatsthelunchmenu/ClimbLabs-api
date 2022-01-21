@@ -9,8 +9,7 @@ import com.example.climblabs.global.utils.image.dto.ImageFileDto;
 import com.example.climblabs.global.utils.pagination.PaginationInfo;
 import com.example.climblabs.post.domain.Post;
 import com.example.climblabs.post.domain.ScaleType;
-import com.example.climblabs.post.domain.content.Advantage;
-import com.example.climblabs.post.domain.content.DisAdvantage;
+import com.example.climblabs.post.domain.ThumbNail;
 import com.example.climblabs.post.domain.repository.PostRepository;
 import com.example.climblabs.post.service.dto.PostDto;
 import com.example.climblabs.post.web.dto.request.PostFilterRequest;
@@ -40,7 +39,6 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-
     private final ImageStorageUtils imageStorageUtils;
 
     @Transactional
@@ -66,10 +64,14 @@ public class PostService {
 
         // 기존에 존재하는 이미지 삭제
         imageStorageUtils.deleteToImages(getPost.getImageNames());
-        imageStorageUtils.deleteToImage(getPost.getThumbnail().getThumbNailName());
-
         List<ImageFileDto> imageDtos = imageStorageUtils.saveToStorages(request.getImages());
-        ImageFileDto thumbNailDto = imageStorageUtils.saveToStorage(request.getThumbNailImage());
+
+        ImageFileDto thumbNailDto = ImageFileDto.builder().build();
+        ThumbNail thumbnail = getPost.getThumbnail();
+        if (thumbnail != null) {
+            imageStorageUtils.deleteToImage(thumbnail.getThumbNailName());
+            thumbNailDto = imageStorageUtils.saveToStorage(request.getThumbNailImage());
+        }
 
         getPost.update(PostDto.of(request, imageDtos, thumbNailDto));
 
@@ -210,11 +212,7 @@ public class PostService {
         else {
             //sido가 비어있을 경우
             if (ObjectUtils.isEmpty(request.getSidos())) {
-                if (request.getScaleTypes().contains(ScaleType.ALL)) {
-                    return getPostInCityFilter(city, pageable);
-                } else {
-                    return getPostInCityAndScaleTypeFilter(city, request, pageable);
-                }
+                return getPostInCityAndScaleTypeFilter(city, request, pageable);
             }
             // scaleType이 비어있을 경우
             else {
