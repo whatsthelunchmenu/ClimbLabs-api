@@ -111,11 +111,15 @@ public class Post extends BaseEntity {
     }
 
     public void setAdvantages(List<String> items) {
+        if (items == null) return;
+
         advantages.clear();
         items.stream().forEach(it -> advantages.add(Advantage.createAdvantage(this, it)));
     }
 
     public void setDisAdvantages(List<String> items) {
+        if (items == null) return;
+
         disAdvantages.clear();
         items.stream().forEach(it -> disAdvantages.add(DisAdvantage.createDisAdvantage(this, it)));
     }

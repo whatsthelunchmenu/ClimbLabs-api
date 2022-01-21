@@ -125,7 +125,9 @@ jacocoTestReport {
                             '**/*Dto*',
                             '**/*dto*',
                             '**/*Request*',
-                            '**/*Response*'
+                            '**/*Response*',
+                            '**/domain/**',
+                            '**/*Entity*'
                     ])
                 })
         )
@@ -140,8 +142,14 @@ jacocoTestCoverageVerification {
             element = 'CLASS'
             // includes = []
 
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.30
+//            }
+
             limit {
-                counter = 'LINE'
+                counter = 'BRANCH'
                 value = 'COVEREDRATIO'
                 minimum = 0.00
             }
@@ -153,7 +161,9 @@ jacocoTestCoverageVerification {
                     '**/*Exception*',
                     '**/*dto*',
                     '**/*Request*',
-                    '**/*Response*'
+                    '**/*Response*',
+                    '**/domain/**',
+                    '**/*Entity*'
             ]
         }
     }
