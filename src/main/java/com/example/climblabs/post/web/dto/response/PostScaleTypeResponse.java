@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostScaleTypeResponse {
-    private List<PostApiResponse> bigs;
-    private List<PostApiResponse> middles;
-    private List<PostApiResponse> smalls;
+    private List<PostResponse> bigs;
+    private List<PostResponse> middles;
+    private List<PostResponse> smalls;
 }

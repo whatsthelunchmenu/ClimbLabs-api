@@ -4,7 +4,7 @@ package com.example.climblabs.post.web;
 import com.example.climblabs.post.domain.ScaleType;
 import com.example.climblabs.post.service.PostService;
 import com.example.climblabs.post.web.dto.request.PostRequest;
-import com.example.climblabs.post.web.dto.response.PostApiResponse;
+import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,8 +104,8 @@ class PostApiControllerTest {
             .andDo(print());
     }
 
-    private PostApiResponse createDummy(long id, String title, ScaleType type) {
-        return PostApiResponse.builder()
+    private PostResponse createDummy(long id, String title, ScaleType type) {
+        return PostResponse.builder()
             .id(id)
             .title(title)
             .level(3)

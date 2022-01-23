@@ -1,5 +1,17 @@
 package com.example.climblabs.post.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
+
 import com.example.climblabs.global.exception.ClimbLabsException;
 import com.example.climblabs.global.exception.ExceptionCode;
 import com.example.climblabs.global.utils.image.ImageStorageUtils;
@@ -10,9 +22,10 @@ import com.example.climblabs.post.domain.ThumbNail;
 import com.example.climblabs.post.domain.repository.PostRepository;
 import com.example.climblabs.post.web.dto.request.PostFilterRequest;
 import com.example.climblabs.post.web.dto.request.PostRequest;
-import com.example.climblabs.post.web.dto.response.PostApiResponse;
 import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,17 +37,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.verify;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -93,7 +95,7 @@ class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         willDoNothing().given(imageStorageUtils).deleteToImages(any());
         //when
-        PostApiResponse response = postService.updatePost(1L, createPostRequestDto());
+        PostResponse response = postService.updatePost(1L, createPostRequestDto());
         //then
         assertThat(response).isNotNull();
         verify(imageStorageUtils).saveToStorages(any());
@@ -112,31 +114,13 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("등록된 5개 게시물 중 2개만 가져오는 페이징 테스트.")
-    void readPostApiTest() throws Exception {
-        //given
-        given(postRepository.findAllByPosts(any()))
-            .willReturn(
-                Lists.newArrayList(
-                    Post.builder().build(),
-                    Post.builder().build()
-                ));
-        //when
-        List<PostResponse> postResponses = postService.readPostApi(Pageable.ofSize(2));
-        postResponses.stream().forEach(System.out::println);
-        //then
-        assertThat(postResponses).hasSize(2);
-        verify(postRepository).findAllByPosts(any());
-    }
-
-    @Test
     @DisplayName("암장 이름 검색이 성공한다.")
     void searchTitleTest() throws Exception {
         //given
         given(postRepository.findLikeTitlePosts(anyString(), any()))
             .willReturn(Lists.newArrayList(Post.builder().build()));
         //when
-        List<PostApiResponse> results = postService.searchTitle("클라이밍", Pageable.ofSize(1));
+        List<PostResponse> results = postService.searchTitle("클라이밍", Pageable.ofSize(1));
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findLikeTitlePosts(anyString(), any());
@@ -154,7 +138,7 @@ class PostServiceTest {
             null,
             Lists.newArrayList(ScaleType.ALL)
         );
-        List<PostApiResponse> results = postService.searchFilter("경기", request, pageable);
+        List<PostResponse> results = postService.searchFilter("경기", request, pageable);
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findCityPosts(anyString(), any());
@@ -172,7 +156,7 @@ class PostServiceTest {
             Lists.newArrayList("강남구"),
             Lists.newArrayList(ScaleType.ALL)
         );
-        List<PostApiResponse> results = postService.searchFilter("경기", request, pageable);
+        List<PostResponse> results = postService.searchFilter("경기", request, pageable);
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findCityAndSidoPosts(anyString(), anyList(), any());
@@ -190,7 +174,7 @@ class PostServiceTest {
             Lists.newArrayList("강남구"),
             Lists.newArrayList(ScaleType.BIG)
         );
-        List<PostApiResponse> results = postService.searchFilter("경기", request, pageable);
+        List<PostResponse> results = postService.searchFilter("경기", request, pageable);
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findCityAndSidoAndScaleTypePosts(anyString(), anyList(), anyList(), any());
@@ -208,7 +192,7 @@ class PostServiceTest {
             Lists.newArrayList("강남구"),
             null
         );
-        List<PostApiResponse> results = postService.searchFilter("경기", request, pageable);
+        List<PostResponse> results = postService.searchFilter("경기", request, pageable);
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findCityAndSidoPosts(anyString(), anyList(), any());
@@ -226,7 +210,7 @@ class PostServiceTest {
             null,
             Lists.newArrayList(ScaleType.BIG)
         );
-        List<PostApiResponse> results = postService.searchFilter("경기", request, pageable);
+        List<PostResponse> results = postService.searchFilter("경기", request, pageable);
         //then
         assertThat(results).hasSize(1);
         verify(postRepository).findCityAndScaleTypePosts(anyString(), anyList(), any());
@@ -254,7 +238,7 @@ class PostServiceTest {
             .willReturn(Lists.newArrayList(Post.builder().build(), Post.builder().build()));
 
         //when
-        List<PostApiResponse> results = postService.readRandomPost(2);
+        List<PostResponse> results = postService.readRandomPost(2);
         //then
         assertThat(results).hasSize(2);
         verify(postRepository).findByRandomLimitPost(anyInt());
