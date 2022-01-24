@@ -46,13 +46,6 @@ public class PostApiController {
         return ResponseEntity.ok(postResponse);
     }
 
-//    @GetMapping("/posts")
-//    public ResponseEntity<?> readMainPost(@PageableDefault Pageable pageable) {
-//        List<PostResponse> postResponses = postService.readPostApi(pageable);
-//
-//        return ResponseEntity.ok(postResponses);
-//    }
-
     @GetMapping("/posts/random/{limit}")
     public ResponseEntity<?> readRandomPostLimit(@PathVariable int limit) {
         return ResponseEntity.ok(postService.readRandomPost(limit));
