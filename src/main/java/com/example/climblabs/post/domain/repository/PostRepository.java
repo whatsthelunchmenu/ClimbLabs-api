@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>{
 
-    @Query("select p from Post p left join fetch p.images left join fetch p.advantages left join fetch p.disAdvantages")
-    List<Post> findAllByPosts(Pageable pageable);
-
     @Query("select p from Post p " +
             "left join fetch p.images " +
             "left join fetch p.advantages " +
@@ -59,9 +56,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     List<Post> findCityAndScaleTypePosts(@Param("city") String city,
                                                 @Param("scaleTypes") List<ScaleType> scaleTypes,
                                                 Pageable pageable);
-
-    @Query("select count (p) from Post p where p.title like %:title%")
-    long countLikeTitlePosts(@Param("title") String title);
 
     @Query(value = "select * from post order by rand() limit :limit", nativeQuery = true)
     List<Post> findByRandomLimitPost(int limit);

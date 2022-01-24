@@ -44,8 +44,8 @@ public class GlobalExceptionHandler {
     @Value
     @Builder
     static class ErrorResult {
-        private String errorCode;
-        private String message;
+        String errorCode;
+        String message;
 
         static ErrorResult of(ClimbLabsException ex) {
             return ErrorResult
