@@ -103,6 +103,30 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("게시물 삭제에 성공한다.")
+    void deletePostTest() throws Exception{
+        //given
+        given(postRepository.findById(anyLong()))
+            .willReturn(Optional.of(new PostDummy(1L)));
+        //when
+        postService.deletePost(1L);
+        //then
+        verify(imageStorageUtils).deleteToImages(any());
+        verify(postRepository).delete(any());
+    }
+
+    @Test
+    @DisplayName("삭제 시 등록된 게시물이 없는 경우 에러 발생 [NOT_FOUND_POST]")
+    void deletePostException() throws Exception{
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> postService.deletePost(1L))
+            .isInstanceOf(ClimbLabsException.class)
+            .hasFieldOrPropertyWithValue("code", ExceptionCode.NOT_FOUND_POST.toString());
+    }
+
+    @Test
     @DisplayName("등록된 게시물이 없는 경우 에러 발생 [NOT_FOUND_POST]")
     void updatePostException() throws Exception {
         //given

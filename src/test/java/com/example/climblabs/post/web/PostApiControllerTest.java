@@ -31,6 +31,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -370,6 +371,60 @@ class PostApiControllerTest {
     }
 
     @Test
+    @DisplayName("게시물 등록에 성공한다.")
+    void createPostTest() throws Exception{
+        //given
+        given(postService.createNewPost(any(PostRequest.class))).willReturn(1L);
+
+        //when
+        RequestBuilder requestBuilder = multipart("/posts")
+            .file("images", "image1".getBytes())
+            .file("images", "image2".getBytes())
+            .file("thumbNailImage", "thumbNailImage".getBytes())
+            .contentType(APPLICATION_JSON)
+            .param("advantages", new String[]{"장점1", "장점2"})
+            .param("disAdvantages", new String[]{"단점1", "단점2"})
+            .params(files);
+
+        //then
+        ResultActions result = mockMvc.perform(requestBuilder)
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andDo(print());
+
+        result.andExpect(status().isOk())
+            .andDo(print())
+            .andDo(
+                document("{class-name}/{method-name}",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestParts(
+                        partWithName("images").description("이미지1"),
+                        partWithName("thumbNailImage").description("썸네일 이미지")
+                    ),
+                    requestParameters(
+                        parameterWithName("title").description("클라이밍장 이름"),
+                        parameterWithName("city").description("지역"),
+                        parameterWithName("zipCode").description("우편번호"),
+                        parameterWithName("street").description("위치"),
+                        parameterWithName("sido").description("시/군/구"),
+                        parameterWithName("level").description("난이도"),
+                        parameterWithName("detailStreet").description("상세 위치"),
+                        parameterWithName("scale").description("크기"),
+                        parameterWithName("scaleType").description("클라이밍장 규모 `ALL`, `BIG`, `MIDDLE`, `SMALL`"),
+                        parameterWithName("feature").description("클라이밍장 특징"),
+                        parameterWithName("advantages").description("클라이밍장 장점"),
+                        parameterWithName("disAdvantages").description("클라이밍장 단점")
+                    ),
+                    responseFields(
+                        fieldWithPath("postId").type(JsonFieldType.NUMBER).description("등록된 게시물 아이디")
+                    )
+                )
+            );
+    }
+
+
+    @Test
     @DisplayName("게시물 수정에 성공한다.")
     public void updatePostTest() throws Exception {
         //given
@@ -442,5 +497,34 @@ class PostApiControllerTest {
                     )
                 )
             );
+    }
+
+    @Test
+    @DisplayName("게시물 삭제에 성공한다.")
+    void deletePostTest() throws Exception{
+        //given
+        willDoNothing().given(postService).deletePost(anyLong());
+
+        //when
+        RequestBuilder requestBuilder = RestDocumentationRequestBuilders.delete("/posts")
+            .param("postId", "1");
+
+        ResultActions result = mockMvc.perform(requestBuilder)
+            .andExpect(status().is2xxSuccessful())
+            .andDo(print());
+
+        //then
+        result.andExpect(status().isOk())
+            .andDo(print())
+            .andDo(
+                document("{class-name}/{method-name}",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestParameters(
+                        parameterWithName("postId").description("삭제할 게시물 아이디")
+                    )
+                )
+            );
+
     }
 }
