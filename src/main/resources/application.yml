@@ -23,6 +23,7 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
 
   #서버배포 시 서버에 상당한 부담이 되므로 false 적용할 것
   devtools:
