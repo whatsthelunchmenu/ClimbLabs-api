@@ -24,8 +24,10 @@ import com.example.climblabs.post.web.dto.request.PostFilterRequest;
 import com.example.climblabs.post.web.dto.request.PostRequest;
 import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -104,10 +106,14 @@ class PostServiceTest {
 
     @Test
     @DisplayName("게시물 삭제에 성공한다.")
-    void deletePostTest() throws Exception{
+    void deletePostTest() throws Exception {
         //given
+        Post post = new PostDummy(1L,
+            ScaleType.BIG,
+            ThumbNail.createThumbNail(new ImageFileDto("test", "url")));
+
         given(postRepository.findById(anyLong()))
-            .willReturn(Optional.of(new PostDummy(1L)));
+            .willReturn(Optional.of(post));
         //when
         postService.deletePost(1L);
         //then
@@ -117,7 +123,7 @@ class PostServiceTest {
 
     @Test
     @DisplayName("삭제 시 등록된 게시물이 없는 경우 에러 발생 [NOT_FOUND_POST]")
-    void deletePostException() throws Exception{
+    void deletePostException() throws Exception {
         //given
         //when
         //then
