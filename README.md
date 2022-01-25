@@ -14,6 +14,9 @@
     <img src="https://img.shields.io/badge/Amazon AWS-232F3E?&logo=Amazon%20AWS&logoColor=white"/>
 </p>
 
+## Intro
+전국에 있는 클라이밍장을 소개하고 추천해주는 앱을 개발하기위한 프로젝트
+
 ## ERD
 
 <p align='center'>
@@ -22,4 +25,8 @@
 
 ## Api Document
 
-**URL** : http://ec2-54-180-17-248.ap-northeast-2.compute.amazonaws.com:8080/docs/api.html
+**Admin URL** : 
+- http://ec2-54-180-17-248.ap-northeast-2.compute.amazonaws.com:8080/docs/admin-api.html
+
+**Client URL** : 
+- http://ec2-54-180-17-248.ap-northeast-2.compute.amazonaws.com:8080/docs/api.html
