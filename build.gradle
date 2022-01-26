@@ -120,14 +120,11 @@ jacocoTestReport {
                 files(classDirectories.files.collect {
                     fileTree(dir: it, excludes: [
                             '**/*Application*',
-                            '**/*Config*',
-                            '**/*Exception*',
-                            '**/*Dto*',
-                            '**/*dto*',
-                            '**/*Request*',
-                            '**/*Response*',
-                            '**/domain/**',
-                            '**/*Entity*'
+                            '**/domain/*',
+                            '**/entity/*',
+                            '**/dto/*',
+                            '**/config/*',
+                            '**/utils/*'
                     ])
                 })
         )
@@ -142,28 +139,25 @@ jacocoTestCoverageVerification {
             element = 'CLASS'
             // includes = []
 
-//            limit {
-//                counter = 'LINE'
-//                value = 'COVEREDRATIO'
-//                minimum = 0.30
-//            }
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.50
+            }
 
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-                minimum = 0.00
+                minimum = 0.70
             }
 
             excludes = [
-                    '**/*Application*',
-                    '**/*Config*',
-                    '**/*Dto*',
-                    '**/*Exception*',
-                    '**/*dto*',
-                    '**/*Request*',
-                    '**/*Response*',
-                    '**/domain/**',
-                    '**/*Entity*'
+                    "**.*Application",
+                    "**.config.*",
+                    "**.domain.*",
+                    '**.global.utils.image.*',
+                    '**.global.exception.*',
+                    '**.web.dto.*',
             ]
         }
     }
