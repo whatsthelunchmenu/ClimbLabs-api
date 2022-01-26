@@ -1,0 +1,51 @@
+= ClimbLabs-Api REST API Guide
+이준희;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[[overview]]
+= v1.0 ClimbLabs 관리자 Api 문서
+
+== 암장 등록
+
+=== 요청
+include::{snippets}/post-api-controller-test/create-post-test/http-request.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/post-api-controller-test/create-post-test/request-parts.adoc[]
+include::{snippets}/post-api-controller-test/create-post-test/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/post-api-controller-test/create-post-test/response-body.adoc[]
+include::{snippets}/post-api-controller-test/create-post-test/response-fields.adoc[]
+
+== 암장 수정
+
+=== 요청
+include::{snippets}/post-api-controller-test/update-post-test/http-request.adoc[]
+
+=== 요청 Path 파라미터
+include::{snippets}/post-api-controller-test/update-post-test/path-parameters.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/post-api-controller-test/update-post-test/request-parts.adoc[]
+include::{snippets}/post-api-controller-test/update-post-test/request-parameters.adoc[]
+
+=== 응답
+include::{snippets}/post-api-controller-test/update-post-test/response-body.adoc[]
+include::{snippets}/post-api-controller-test/update-post-test/response-fields.adoc[]
+
+== 암장 삭제
+
+=== 요청
+include::{snippets}/post-api-controller-test/delete-post-test/http-request.adoc[]
+
+=== 요청 파라미터
+include::{snippets}/post-api-controller-test/delete-post-test/request-parameters.adoc[]
+

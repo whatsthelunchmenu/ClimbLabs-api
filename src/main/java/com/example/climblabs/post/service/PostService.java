@@ -13,11 +13,13 @@ import com.example.climblabs.post.web.dto.request.PostFilterRequest;
 import com.example.climblabs.post.web.dto.request.PostRequest;
 import com.example.climblabs.post.web.dto.response.PostResponse;
 import com.example.climblabs.post.web.dto.response.PostScaleTypeResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +50,20 @@ public class PostService {
 
         newPost.update(PostDto.of(request, imageDtos, thumbNailDto));
         return newPost;
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new ClimbLabsException(ExceptionCode.NOT_FOUND_POST));
+
+        imageStorageUtils.deleteToImages(post.getImageNames());
+        ThumbNail thumbnail = post.getThumbnail();
+        if (thumbnail != null) {
+            imageStorageUtils.deleteToImage(thumbnail.getThumbNailName());
+        }
+
+        postRepository.delete(post);
     }
 
     @Transactional
